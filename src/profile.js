@@ -1,0 +1,124 @@
+import { initializeApp } from 'firebase/app';
+import {
+    getAuth,
+    signInWithEmailAndPassword,
+    createUserWithEmailAndPassword,
+    fetchSignInMethodsForEmail,
+    deleteUser,
+    onAuthStateChanged,
+    signOut, sendPasswordResetEmail
+} from "firebase/auth";
+import {
+    getFirestore, collection, onSnapshot,
+    addDoc, deleteDoc, doc,
+    query, where,
+    orderBy, serverTimestamp,
+    getDoc, child, get, Timestamp, updateDoc
+} from 'firebase/firestore';
+
+import * as global from "./global.js";
+
+// Auth
+const auth = getAuth();
+
+let userId = "userId";
+const user = auth.currentUser;
+
+
+let params = new URLSearchParams(window.location.search);
+let profileId = params.get('id');
+console.log(profileId);
+const userProfile = doc(global.moduleRef, profileId);
+
+const headProfile = document.getElementById('head-profile');
+
+const detailsProfile = document.getElementById('list-profile');
+
+const listCourses = document.getElementById('list-courses');
+
+function addUserDetails() {
+    let userR = doc(global.userRef, profileId);
+
+    getDoc(userR).then((docu) => {
+        if (docu.exists()) {
+            const ddata = docu.data();
+            let h1 = document.createElement('h1');
+            h1.innerText = global.getUserName(ddata);
+            headProfile.append(h1);
+            let h4 = document.createElement('h4');
+            let h5 = document.createElement('h5');
+            let h42 = document.createElement('h4');
+            let h52 = document.createElement('h5');
+            h4.innerText = "Email: ";
+            h5.innerText = global.getUserEmail(ddata);
+            h4.append(h5)
+            h42.innerText = "Role: ";
+            h52.innerText = global.getUserRole(ddata);
+            h42.append(h52);
+            detailsProfile.append(h4, h42);
+        } else {
+            console.log("No such document!");
+        }
+    }).catch((error) => {
+        console.log("Error getting document:", error);
+    });
+}
+
+function addCourses() {
+    const courseQuery = query(global.usermoduleRef, where(global.usermoduleUserId, '==', profileId));
+    onSnapshot(courseQuery, (querySnapshot) => {
+        querySnapshot.forEach((docu) => {
+            let moduleId = global.getUserModuleId(docu.data());
+            getDoc(doc(global.moduleRef, moduleId)).then((docu2) => {
+                const data2 = docu2.data();
+                let a = document.createElement('a');
+                a.innerText = global.getModuleName(data2);
+                let tr = document.createElement('tr');
+                let td1 = document.createElement('td');
+                let td = document.createElement('td');
+                let grade = global.getUserModuleGrade(docu.data());
+                td.innerText = "-";
+                if (grade != null) {
+                    td.innerText = grade;
+                }
+
+                a.href = "module.html?id=" + docu2.id;
+                td1.append(a);
+                tr.append(td1, td);
+                listCourses.append(tr);
+            });
+        });
+    });
+}
+
+
+// *-------------------------------------------------------------------------------* //
+// *-------------------------------------------------------------------------------* //
+// *----------------------- AUTHENTIFICATIONS -------------------------------* //
+// *-------------------------------------------------------------------------------* //
+// *-------------------------------------------------------------------------------* //
+
+
+onAuthStateChanged(auth, (user) => {
+    //AuthChanges(user);
+    if (user == null) {
+        window.location.replace("login.html");
+        return;
+    }
+    else {
+        const userQuery = query(global.userRef, where(global.userId, '==', user.uid));
+        console.log("User logged in", user.uid);
+        onSnapshot(userQuery, (querySnapshot) => {
+            querySnapshot.forEach((docu) => {
+                userId = docu.id;
+                document.body.style.display = "block";
+                console.log("admin");
+                addUserDetails();
+                addCourses();
+            });
+        }, (error) => {
+            window.location.replace("login.html");
+        });
+    }
+});
+

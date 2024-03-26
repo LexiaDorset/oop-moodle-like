@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exam</title>
+    <link rel="stylesheet" href="../assets/css/admin/exam.css">
+    <link rel="stylesheet" href="../assets/css/global.css">
+    <link rel="stylesheet" href="../assets/fonts/fontawesome-all.min.css">
+    <link rel="stylesheet" href="../assets/fonts/font-awesome.min.css">
+</head>
+
+<body style="display: none;">
+
+    <div class="nav">
+        <div class="nav-extend">
+            <img class="logo" src="../assets/img/logo.png" alt="logo">
+            <a class="item-nav" href="dashboard.html">Dashboard</a>
+            <button class="logout">Logout</button>
+        </div>
+    </div>
+
+    <div class="all-exam">
+        <div class="header-exam" id="head-exam"></div>
+        <div class="nav-exam">
+            <a class="change-type" id="exam">Exam</a>
+            <a class="change-type" id="grades">Grades</a>
+        </div>
+
+        <div class="details-exam" style="display: none;">
+            <h2>General<i class="fas fa-edit edit-exam-i" id="editButtonExam" onclick="window.editExam.showModal()"></i>
+            </h2>
+            <div>
+                <div id="details-exam" class="general-exam">
+                </div>
+                <div id="details-exam-plus" class="details-exam-plus">
+
+                </div>
+            </div>
+
+        </div>
+
+        <div class="table-wrapper" style="display: none;">
+            <table class="fl-table">
+                <thead>
+                    <tr>
+                        <th>Full Name</th>
+                        <th>Grades</th>
+                        <th>Roles</th>
+                    </tr>
+                </thead>
+                <tbody class="grades" id="list-grades"> <!--Keep the id-->
+                    <!-- The elements are added dynamically, exemple of what it look like:
+                    <tr>
+                       <td>TestNewCoucou</td>
+                    </tr>
+                    -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+    <dialog id="editExam">
+        <form class="edit-exam" style="text-align: center;">
+            <h3 style="margin-bottom: 2%;">Edit this Exam</h3>
+            <br>
+            <label for="date">Date</label>
+            <input type="date" name="date" required>
+            <br>
+            <label for="name">Name</label>
+            <input type="text" name="name">
+            <br>
+            <label for="description">Description</label>
+            <input type="text" name="description">
+            <br>
+            <button style="margin-top: 2%; padding:2%; cursor: pointer;">Edit this Exam</button>
+        </form>
+        <button id="delete-exam">Delete this Exam</button>
+        <button onclick="window.editExam.close();" aria-label="close" class="x">❌</button>
+    </dialog>
+
+    <script src="bundles/exam.bundle.js"></script>
+
+</body>
+
+</html>

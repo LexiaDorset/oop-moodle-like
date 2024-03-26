@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Course</title>
+    <link rel="stylesheet" href="../assets/css/admin/module.css">
+    <link rel="stylesheet" href="../assets/css/global.css">
+    <link rel="stylesheet" href="../assets/fonts/fontawesome-all.min.css">
+    <link rel="stylesheet" href="../assets/fonts/font-awesome.min.css">
+</head>
+
+<body style="display: none;">
+    <div class="nav">
+        <div class="nav-extend">
+            <img class="logo" src="../assets/img/logo.png" alt="logo">
+            <a class="item-nav" href="dashboard.html">Dashboard</a>
+            <button class="logout">Logout</button>
+        </div>
+    </div>
+
+    <div class="all-module">
+
+        <div class="header-module" id="head-module"></div>
+        <div class="nav-module">
+            <a class="change-type" id="course">Course</a>
+            <a class="change-type" id="participants">Participants</a>
+        </div>
+
+        <div class="details-module" style="display: none;">
+            <h2>General</h2>
+            <div id="details-module">
+            </div>
+            <div class="all-courses">
+                <div class="header-courses">
+                    <h2>Courses</h2>
+                    <div class="add-button" id="add-course" onclick="window.addCourse.showModal()"> <i
+                            class="fa fa-plus py-2 mr-3"></i>
+                    </div>
+                </div>
+                <div id="list-courses" class="list-courses">
+
+                </div>
+            </div>
+        </div>
+
+        <div class="container-exams" style="display: none;">
+
+            <div class="all-exams">
+                <div class="header-courses">
+                    <h2>Exams</h2>
+                    <div class="add-button" id="add-exam" onclick="window.addExam.showModal()"><i
+                            class="fa fa-plus py-2 mr-3"></i></div>
+                </div>
+                <div id="list-exams" class="list-exams">
+
+                </div>
+            </div>
+        </div>
+
+
+
+        <div class="participants-page" style="display: none;">
+            <div class="table-wrapper">
+                <table class="fl-table">
+                    <thead>
+                        <tr>
+                            <th>Full Name</th>
+                            <th>Grades</th>
+                            <th>Roles</th>
+                        </tr>
+                    </thead>
+                    <tbody class="participants" id="list-participants"> <!--Keep the id-->
+                        <!-- The elements are added dynamically, exemple of what it look like:
+                    <tr>
+                       <td>TestNewCoucou</td>
+                    </tr>
+                    -->
+                    </tbody>
+                </table>
+            </div>
+            <button id="add-participant" class="buttonAdd" onclick="window.addParticipant.showModal()">Add a
+                user</button>
+        </div>
+    </div>
+
+    <dialog id="addCourse">
+        <form class="add-course" style="text-align: center;">
+            <h3 style="margin-bottom: 2%;">Create a new course</h3>
+            <br>
+            <label for="start_date">Start Date</label>
+            <input type="datetime-local" name="start_date" required>
+            <br>
+            <label for="end_date">End Date</label>
+            <input type="datetime-local" name="end_date" required>
+            <br>
+            <label for="description">Description</label>
+            <input type="text" name="description" value="Class description">
+            <br>
+            <button style="margin-top: 2%; padding:2%; cursor: pointer;">Add a new course</button>
+        </form>
+        <button onclick="window.addCourse.close();" aria-label="close" class="x">❌</button>
+    </dialog>
+
+    <dialog id="addExam">
+        <form class="add-exam" style="text-align: center;">
+            <h3 style="margin-bottom: 2%;">Create a new exam</h3>
+            <br>
+            <label for="date">Date</label>
+            <input type="date" name="date" required>
+            <br>
+            <label for="name">Name</label>
+            <input type="text" name="name">
+            <br>
+            <label for="description">Description</label>
+            <input type="text" name="description">
+            <br>
+            <button style="margin-top: 2%; padding:2%; cursor: pointer;">Add a new exam</button>
+        </form>
+        <button onclick="window.addExam.close();" aria-label="close" class="x">❌</button>
+    </dialog>
+
+
+    <dialog id="editCourse">
+        <form class="edit-course" style="text-align: center;">
+            <h3 style="margin-bottom: 2%;">Edit this course</h3>
+            <br>
+            <label for="start_date">Start Date</label>
+            <input type="datetime-local" name="start_date" required>
+            <br>
+            <label for="end_date">End Date</label>
+            <input type="datetime-local" name="end_date" required>
+            <br>
+            <label for="description">Description</label>
+            <input type="text" name="description" value="Class description">
+            <br>
+            <button onclick="window.editCourse.close()" style="margin-top: 2%; padding:2%; cursor: pointer;">Update this
+                course</button>
+        </form>
+        <button id="delete-course">Delete this course</button>
+        <button onclick="window.editCourse.close();" aria-label="close" class="x">❌</button>
+    </dialog>
+
+    <dialog id="addParticipant">
+        <form class="add-participant" style="text-align: center;">
+            <h3 style="margin-bottom: 2%;">Add a user to the course</h3>
+            <br>
+            <label for="user">User</label>
+            <select name="user" id="selectUserAdd" required>
+            </select>
+            <br>
+            <button style="margin-top: 2%; padding:2%; cursor: pointer;">Add this user to the course ?</button>
+        </form>
+        <button onclick="window.addParticipant.close();" aria-label="close" class="x">❌</button>
+    </dialog>
+
+    <script src="bundles/module.bundle.js"></script>
+</body>
+
+</html>

@@ -4,11 +4,60 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Login</title>
+    <meta name="description" content="Dev Ops Web page.">
 </head>
 
 <body>
+    <div class="login-box">
+        <h1 class="main-title">Login</h1>
+        <form class="login">
+            <div>
+                <label for="email" class="login-label">Email</label>
+                <input type="text" name="email" required>
+            </div>
+            <div>
+                <label for="password" class="login-label">Password</label>
+                <input type="password" name="password" required>
+            </div>
+            <div>
+                <input type="submit" value="Log In">
+            </div>
+        </form>
+        <div>
+            <input type="submit" value="Log In Admin" onclick="window.loginAdmin.showModal()">
+        </div>
+        <a onclick="window.resetPassword.showModal()" style="cursor: pointer;">Forgot your password?</a>
+        <br>
+        <a href="#">Terms of services and private policy</a>
+    </div>
 
+    <dialog id="resetPassword">
+        <form class="resetPassword" style="text-align: center;">
+            <h3 style="margin-bottom: 2%;">Reset password</h3>
+            <label for="email">Email:</label>
+            <input type="text" name="email" required>
+            <br>
+            <button style="margin-top: 2%; padding:2%; cursor: pointer; text-align: center;">Send an email</button>
+        </form>
+        <button onclick="window.resetPassword.close();" aria-label="close" class="x">❌</button>
+    </dialog>
+
+    <dialog id="loginAdmin">
+        <form class="login-admin">
+            <div>
+                <label for="password" class="login-label">Password</label>
+                <input type="password" name="password" required class="login-input">
+            </div>
+            <div class="login-input-div">
+                <input type="submit" value="Log In Admin" class="login-button">
+            </div>
+        </form>
+        <button onclick="window.loginAdmin.close();" aria-label="close" class="x">❌</button>
+    </dialog>
+
+    <a href="index.html">Home</a>
+    <script src="bundles/login.bundle.js"></script>
 </body>
 
 </html>

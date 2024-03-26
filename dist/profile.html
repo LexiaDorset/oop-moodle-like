@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile:</title>
+    <link rel="stylesheet" href="../assets/css/profile.css">
+    <link rel="stylesheet" href="../assets/css/global.css">
+</head>
+
+<body>
+    <div class="nav">
+        <div class="nav-extend">
+            <img class="logo" src="../assets/img/logo.png" alt="logo">
+            <a class="item-nav" href="dashboard.html">Dashboard</a>
+            <button class="logout">Logout</button>
+        </div>
+    </div>
+    <div class="all-profile">
+
+        <div id="head-profile"></div>
+
+        <div class="details-profile">
+            <div class="header-profile">
+                <h2>User details</h2>
+            </div>
+            <div id="list-profile" class="list-profile">
+
+            </div>
+        </div>
+
+        <div class="list-course">
+            <div class="header-profile">
+                <h2>Course I am taking</h2>
+            </div>
+            <div class="table-wrapper">
+                <table class="fl-table">
+                    <thead>
+                        <tr>
+                            <th>Module name</th>
+                            <th>Grade</th>
+                        </tr>
+                    </thead>
+                    <tbody id="list-courses" class="list-courses">
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <script src="bundles/profile.bundle.js"></script>
+</body>
+
+</html>

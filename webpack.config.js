@@ -5,6 +5,10 @@ module.exports = {
     entry: {
         index: './src/index.js',
         login: './src/login.js',
+        dashboard: './src/dashboard.js',
+        module: './src/module.js',
+        exam: './src/exam.js',
+        profile: './src/profile.js',
     },
     output: {
         path: path.resolve(__dirname, 'dist'),

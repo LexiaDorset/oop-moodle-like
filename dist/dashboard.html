@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="../assets/css/admin/dashboard.css">
+    <link rel="stylesheet" href="../assets/css/global.css">
+</head>
+
+<body style="display: none;">
+
+    <div class="nav">
+        <div class="nav-extend">
+            <img class="logo" src="../assets/img/logo.png" alt="logo">
+            <a class="item-nav" href="#">Dashboard</a>
+            <button class="logout">Logout</button>
+        </div>
+    </div>
+
+
+    <div class="modules-ui">
+        <div class="module-capsule">
+            <div class="modules-header">
+                <h1>Courses Overview</h1>
+                <button class="addModuleButton" id="add-module" onclick="window.addModule.showModal()">+</button>
+            </div>
+            <div class="container-cards" id="list-module">
+
+
+            </div>
+        </div>
+    </div>
+
+    <div class="table-container">
+        <h1 class="table-header">Users</h1>
+        <div class="table-wrapper">
+            <table class="fl-table">
+                <thead>
+                    <tr>
+                        <th>Full name</th>
+                        <th>Role</th>
+                    </tr>
+                </thead>
+                <tbody id="list-participants"> <!--Keep the id-->
+                    <!-- The elements are added dynamically, exemple of what it look like:
+                <tr>
+                   <td>TestNewCoucou</td>
+                </tr>
+                -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+    <dialog id="addModule">
+        <form class="add-module" style="text-align: center;">
+            <h3 style="margin-bottom: 2%;">Create a new module</h3>
+            <label for="name">Title:</label>
+            <input type="text" name="name" required>
+            <br>
+            <button style="margin-top: 2%; padding:2%; cursor: pointer;">Add a new module</button>
+        </form>
+        <button onclick="window.addModule.close();" aria-label="close" class="x">❌</button>
+    </dialog>
+
+
+
+
+
+    <script src="bundles/dashboard.bundle.js"></script>
+</body>
+
+
+</html>

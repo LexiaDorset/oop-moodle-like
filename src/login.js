@@ -1,0 +1,105 @@
+import { initializeApp } from 'firebase/app';
+import {
+    getAuth,
+    signInWithEmailAndPassword,
+    createUserWithEmailAndPassword,
+    fetchSignInMethodsForEmail,
+    deleteUser,
+    onAuthStateChanged,
+    signOut, sendPasswordResetEmail
+} from "firebase/auth";
+
+import * as global from "./global.js";
+
+// Your web app's Firebase configuration
+const firebaseConfig = {
+    apiKey: "AIzaSyDh4Hfogm5owW-g1PBv2ClffErwz7g88D8",
+    authDomain: "poofinal-54e26.firebaseapp.com",
+    projectId: "poofinal-54e26",
+    storageBucket: "poofinal-54e26.appspot.com",
+    messagingSenderId: "295749420687",
+    appId: "1:295749420687:web:95abbe1f9ff4c0fc5d52fa"
+};
+
+// Auth
+const auth = getAuth();
+
+// Elements
+
+// Forms
+const loginForm = document.querySelector('.login'); // Login form
+const loginAdminForm = document.querySelector('.login-admin'); // Login Admin form
+const passwordResetform = document.querySelector('.resetPassword'); // Reset password form
+
+// *------------------------------------------------* //
+// *------------------------------------------------* //
+// *----------------- Functions --------------------* //
+// *------------------------------------------------* //
+// *-----------------------------------------------* //
+
+// *-----------------------------------------------* //
+// *------------------ Log in ---------------------* //
+// *-----------------------------------------------* //
+
+// Log in form event listener
+
+loginForm.addEventListener('submit', (e) => {
+    e.preventDefault()
+
+    const email = loginForm.email.value;
+    const password = loginForm.password.value
+
+    signInWithEmailAndPassword(auth, email, password)
+        .then((cred) => {
+            console.log('user logged in: ', cred.user)
+            loginForm.reset()
+            window.location.replace("user/dashboard.html");
+            console.log('user logged in: ', cred.user.email)
+        })
+        .catch((err) => {
+            console.log(err.message)
+        })
+})
+
+// Admin login form event listener
+
+loginAdminForm.addEventListener('submit', (e) => {
+    e.preventDefault()
+
+    const email = "admin@gmail.com"
+    const password = loginAdminForm.password.value
+
+    signInWithEmailAndPassword(auth, email, password)
+        .then((cred) => {
+            console.log('admin logged in: ', cred.user)
+            loginAdminForm.reset()
+            window.location.replace("admin/dashboard.html");
+            console.log('admin logged in: ', cred.user.email)
+        })
+        .catch((err) => {
+            console.log(err.message)
+        })
+})
+
+// *-----------------------------------------------* //
+// *--------------- Reset Password -----------------* //
+// *-----------------------------------------------* //
+
+// Reset password function
+
+let forgotPassword = () => {
+    sendPasswordResetEmail(auth, passwordResetform.email.value).then(() => {
+        alert('Password reset email sent!');
+    }).catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        console.log("This user doesn't exists", errorCode)
+    });
+}
+
+// Reset password form event listener 
+
+passwordResetform.addEventListener('submit', (e) => {
+    e.preventDefault();
+    forgotPassword();
+});

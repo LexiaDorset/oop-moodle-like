@@ -1,0 +1,90 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.nav {
+    background-color: #575757;
+}
+
+.nav-extend {
+    align-items: center ! important;
+    display: flex;
+    gap: 2%;
+}
+
+.logo {
+    width: 100px;
+}
+
+.item-nav {
+    color: white;
+    text-decoration: none;
+}
+
+.logout {
+    padding: 7px;
+    margin-left: auto;
+    margin-right: 1%;
+}
+
+
+.table-wrapper {
+    margin: 2%;
+    border: 1px solid black;
+}
+
+.fl-table {
+    border-radius: 5px;
+    font-size: 12px;
+    font-weight: normal;
+    border: none;
+    border-collapse: collapse;
+    width: 100%;
+    max-width: 100%;
+    white-space: nowrap;
+    background-color: white;
+    table-layout: fixed;
+}
+
+.fl-table td,
+.fl-table th {
+    text-align: center;
+    padding: 8px;
+}
+
+.fl-table td {
+    border-right: 1px solid #f8f8f8;
+    font-size: 12px;
+}
+
+
+.fl-table thead th {
+    color: #ffffff;
+    background: #324960;
+}
+
+.fl-table thead th:not(:last-child) {
+    border-right: 1px solid #000000;
+    /* Ajoutez cette ligne */
+}
+
+.fl-table tr:nth-child(even) {
+    background: #F8F8F8;
+}
+
+.fl-table tr:nth-child(even) {
+    background: #F8F8F8;
+}
+
+.x {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+
+dialog {
+    padding: 1%;
+    margin: auto;
+}
