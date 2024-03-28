@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="../assets/css/admin/dashboard.css">
+    <link rel="stylesheet" href="../assets/css/global.css">
+    <link rel="stylesheet" href="../assets/fonts/fontawesome-all.min.css">
+    <link rel="stylesheet" href="../assets/fonts/font-awesome.min.css">
+</head>
+
+<body style="display: none;">
+
+    <div class="nav">
+        <div class="nav-extend">
+            <img class="logo" src="../assets/img/logo.png" alt="logo">
+            <a class="item-nav" href="dashboard.html">Dashboard</a>
+            <div class="image-profile toggle-all">
+                <div class="image-profile dropdown-toggle">
+                    <i class="fa fa-user-circle-o" style="font-size:36px"></i>
+                </div>
+                <div class="dropdown hidden">
+                    <div class="inside-dropdown">
+                        <div id="profile" class="item-dropdown">
+                            <a class="profile">Profile</a>
+                        </div>
+                        <div class="item-dropdown">
+                            <a class="logout">Logout</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modules-ui">
+        <div class="module-capsule">
+            <div class="modules-header">
+                <h1>Courses Overview</h1>
+
+            </div>
+            <div class="container-cards" id="list-module">
+
+
+            </div>
+        </div>
+    </div>
+
+    <script src="bundles/courses.bundle.js"></script>
+
+</body>
+
+
+</html>

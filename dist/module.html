@@ -16,7 +16,21 @@
         <div class="nav-extend">
             <img class="logo" src="../assets/img/logo.png" alt="logo">
             <a class="item-nav" href="dashboard.html">Dashboard</a>
-            <button class="logout">Logout</button>
+            <div class="image-profile">
+                <div class="image-profile dropdown-toggle">
+                    <i class="fa fa-user-circle-o" style="font-size:36px"></i>
+                </div>
+                <div class="dropdown hidden">
+                    <div class="inside-dropdown">
+                        <div id="profile" class="item-dropdown">
+                            <a class="profile">Profile</a>
+                        </div>
+                        <div class="item-dropdown">
+                            <a class="logout">Logout</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -33,11 +47,9 @@
             <div id="details-module">
             </div>
             <div class="all-courses">
-                <div class="header-courses">
+                <div class="header-courses h-c">
                     <h2>Courses</h2>
-                    <div class="add-button" id="add-course" onclick="window.addCourse.showModal()"> <i
-                            class="fa fa-plus py-2 mr-3"></i>
-                    </div>
+
                 </div>
                 <div id="list-courses" class="list-courses">
 
@@ -48,10 +60,9 @@
         <div class="container-exams" style="display: none;">
 
             <div class="all-exams">
-                <div class="header-courses">
+                <div class="header-courses header-exam">
                     <h2>Exams</h2>
-                    <div class="add-button" id="add-exam" onclick="window.addExam.showModal()"><i
-                            class="fa fa-plus py-2 mr-3"></i></div>
+                    <!-- Button added with js -->
                 </div>
                 <div id="list-exams" class="list-exams">
 

@@ -17,7 +17,21 @@
         <div class="nav-extend">
             <img class="logo" src="../assets/img/logo.png" alt="logo">
             <a class="item-nav" href="dashboard.html">Dashboard</a>
-            <button class="logout">Logout</button>
+            <div class="image-profile">
+                <div class="image-profile dropdown-toggle">
+                    <i class="fa fa-user-circle-o" style="font-size:36px"></i>
+                </div>
+                <div class="dropdown hidden">
+                    <div class="inside-dropdown">
+                        <div id="profile" class="item-dropdown">
+                            <a class="profile">Profile</a>
+                        </div>
+                        <div class="item-dropdown">
+                            <a class="logout">Logout</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -29,7 +43,7 @@
         </div>
 
         <div class="details-exam" style="display: none;">
-            <h2>General<i class="fas fa-edit edit-exam-i" id="editButtonExam" onclick="window.editExam.showModal()"></i>
+            <h2 id="h2-general">General
             </h2>
             <div>
                 <div id="details-exam" class="general-exam">

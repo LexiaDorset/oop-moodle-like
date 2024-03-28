@@ -2,10 +2,12 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 }
 
 .nav {
-    background-color: #575757;
+    background-color: #bababa;
+    padding: 1%
 }
 
 .nav-extend {
@@ -19,15 +21,80 @@
 }
 
 .item-nav {
-    color: white;
+    color: black;
     text-decoration: none;
+    font-size: 17px;
 }
 
-.logout {
-    padding: 7px;
+.image-profile {
     margin-left: auto;
-    margin-right: 1%;
+    align-items: center;
+    display: relative;
 }
+
+
+.dropdown-toggle::after {
+    content: "";
+    margin-right: 0;
+    margin-left: 4px;
+    display: inline-block;
+    font: normal normal normal 14px/1 FontAwesome;
+    font-size: 14px;
+    font-size: inherit;
+    text-rendering: auto;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-size: 9px;
+    width: 9px;
+    border: 0;
+}
+
+.image-profile .dropdown-toggle {
+    cursor: pointer;
+    /* Ajout d'un curseur pointer pour indiquer qu'il est cliquable */
+}
+
+.dropdown {
+    position: absolute;
+    display: block;
+    background-color: white;
+    min-width: 230px;
+    left: calc(100% - 10.5rem);
+    min-width: 10rem;
+    border: 1px solid #e5e5e5;
+    border-radius: 10px;
+}
+
+.hidden {
+    display: none;
+}
+
+.inside-dropdown {
+    position: relative;
+    display: inline-grid;
+    cursor: pointer;
+    min-width: 100%;
+}
+
+.item-dropdown {
+    padding: 0% 5% 0% 5%;
+    border-radius: 10px;
+    padding-top: 5%;
+}
+
+
+.item-dropdown {
+    padding-bottom: 5%;
+}
+
+
+.item-dropdown:hover {
+    text-decoration: none;
+    color: black;
+    background-color: whitesmoke;
+    width: 100%;
+}
+
 
 
 .table-wrapper {
@@ -87,4 +154,11 @@
 dialog {
     padding: 1%;
     margin: auto;
+}
+
+.add-button {
+    cursor: pointer;
+    background-color: #e0e0e0;
+    border-radius: 10px;
+    padding: 0% 1% 0% 1%
 }

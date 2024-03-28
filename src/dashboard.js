@@ -29,6 +29,22 @@ const listTeachers = document.getElementById('list-participants');
 const listModules = document.getElementById('list-module');
 
 
+const listCourses = document.getElementById('list-courses');
+const listExams = document.getElementById('list-exams');
+
+
+// *-------------------------------------------------------------------------------* //
+// *-------------------------- Profile ----------------------------* //
+// *-------------------------------------------------------------------------------* //
+
+const profile = document.getElementById('profile');
+
+const dropdownToggle = document.querySelector('.dropdown-toggle');
+dropdownToggle.addEventListener('click', () => {
+    const dropdownMenu = document.querySelector('.dropdown');
+    dropdownMenu.classList.toggle('hidden');
+});
+
 // *-------------------------------------------------------------------------------* //
 // *-------------------------- Create a new module ----------------------------* //
 // *-------------------------------------------------------------------------------* //
@@ -75,48 +91,207 @@ function addUserToList() {
 }
 
 // *-------------------------------------------------------------------------------* //
-// *-------------------------- List Modules ----------------------------* //
+// *-------------------------- Add Modules to list all----------------------------* //
 // *-------------------------------------------------------------------------------* //
 
-function addModulesToList() {
+function addModulesToListd(ddata, docu) {
+    let div = document.createElement('div');
+    div.classList.add("card");
+
+    let a1 = document.createElement('a');
+    a1.href = "module.html?id=" + docu.id + "&type=course";
+    let img = document.createElement('img');
+    img.classList.add("card-img-top");
+    img.src = "../../assets/img/logo.png";
+    a1.appendChild(img);
+
+
+    let divbody = document.createElement('div');
+    divbody.classList.add("card-body");
+    let title = document.createElement('a');
+    title.classList.add("card-title");
+    title.innerText = global.getModuleName(ddata);
+    title.href = "module.html?id=" + docu.id;
+
+    let p = document.createElement('p');
+    p.classList.add("card-text");
+    p.innerText = global.getModuleDescription(ddata);
+
+    divbody.append(title, p);
+    div.append(a1, divbody);
+
+    listModules.appendChild(div);
+}
+
+// *-------------------------------------------------------------------------------* //
+// *-------------------------- List Modules for admin ----------------------------* //
+// *-------------------------------------------------------------------------------* //
+
+function addModulesToListAdmin() {
     onSnapshot(global.moduleRef, (querySnapshot) => {
         querySnapshot.forEach((docu) => {
-            const ddata = docu.data();
-            let div = document.createElement('div');
-            div.classList.add("card");
-
-            let a1 = document.createElement('a');
-            a1.href = "module.html?id=" + docu.id + "&type=course";
-            let img = document.createElement('img');
-            img.classList.add("card-img-top");
-            img.src = "../../assets/img/logo.png";
-            a1.appendChild(img);
-
-
-            let divbody = document.createElement('div');
-            divbody.classList.add("card-body");
-            let title = document.createElement('a');
-            title.classList.add("card-title");
-            title.innerText = global.getModuleName(ddata);
-            title.href = "module.html?id=" + docu.id;
-
-            let p = document.createElement('p');
-            p.classList.add("card-text");
-            p.innerText = global.getModuleDescription(ddata);
-
-            divbody.append(title, p);
-            div.append(a1, divbody);
-
-            listModules.appendChild(div);
+            addModulesToListd(docu.data(), docu)
         });
     });
 }
+
+// *-------------------------------------------------------------------------------* //
+// *-------------------------- Add User ----------------------------* //
+// *-------------------------------------------------------------------------------* //
+
+const formAddUser = document.querySelector('.add-user');
+
+formAddUser.addEventListener('submit', (e) => {
+    e.preventDefault();
+    addDoc(global.userRef, {
+        full_name: formAddUser.name.value,
+        email: formAddUser.email.value,
+        role: formAddUser.role.value,
+        user_id: "fakeId",
+        password: formAddUser.password.value
+    })
+        .then(() => {
+            console.log('User added');
+        })
+        .catch((error) => {
+            console.error('Error adding user:', error);
+        });
+    console.log("test");
+    formAddUser.reset();
+})
+
+
+// *-------------------------------------------------------------------------------* //
+// *-------------------------- Add Next Courses ----------------------------* //
+// *-------------------------------------------------------------------------------* //
+
+function addCourses() {
+    const userModuleQuery = query(global.usermoduleRef, where(global.usermoduleUserId, "==", userId));
+    onSnapshot(userModuleQuery, (querySnapshot) => {
+        querySnapshot.forEach((docu2) => {
+            let moduleId = global.getUserModuleId(docu2.data());
+            const courseQuery = query(global.courseRef, where(global.courseModule, '==', moduleId));
+            onSnapshot(courseQuery, (querySnapshot) => {
+                querySnapshot.forEach((docu) => {
+                    if (document.getElementById(docu.id + "course")) {
+                        console.log("Course already exists");
+                        return;
+                    }
+                    const ddata = docu.data();
+                    let card = document.createElement('div');
+                    card.classList.add("card-course");
+                    let h6 = document.createElement('h6');
+                    let name = "";
+                    getDoc(doc(global.moduleRef, moduleId)).then((docu3) => {
+                        addExams(moduleId);
+                        name = global.getModuleName(docu3.data());
+                        let h4_1 = document.createElement('h4');
+                        let h4_2 = document.createElement('h4');
+                        let h3 = document.createElement('h3');
+                        let date = global.getCourseStartDate(ddata).toDate()
+                        let date2 = global.getCourseEndDate(ddata).toDate()
+                        // Usage
+                        if (global.isSameDay(date2, date)) {
+                            h3.innerText = name + " - " + date.toLocaleDateString('en-GB', {
+                                weekday: 'long',
+                                year: 'numeric',
+                                month: 'long',
+                                day: 'numeric'
+                            }) + ', ' + date.toLocaleTimeString('en-GB', {
+                                hour: '2-digit',
+                                minute: '2-digit'
+                            }) + " ► " + date.toLocaleTimeString('en-GB', {
+                                hour: '2-digit',
+                                minute: '2-digit'
+                            });
+                        }
+                        else {
+                            h3.innerText = name + " - " + date.toLocaleDateString('en-GB', {
+                                weekday: 'long',
+                                year: 'numeric',
+                                month: 'long',
+                                day: 'numeric'
+                            }) + ', ' + date.toLocaleTimeString('en-GB', {
+                                hour: '2-digit',
+                                minute: '2-digit'
+                            }) + " ► " + date2.toLocaleDateString('en-GB', {
+                                weekday: 'long',
+                                year: 'numeric',
+                                month: 'long',
+                                day: 'numeric'
+                            }) + ', ' + date2.toLocaleTimeString('en-GB', {
+                                hour: '2-digit',
+                                minute: '2-digit'
+                            });
+                        }
+                        h4_2.innerText = "Description: " + global.getCourseDescription(ddata);
+                        card.append(h6, h3, h4_1, h4_2);
+                        card.id = docu.id + "course";
+                        listCourses.appendChild(card);
+                    });
+                });
+            });
+        });
+    });
+}
+
+// *-------------------------------------------------------------------------------* //
+// *-------------------------- Add Next Exams ----------------------------* //
+// *-------------------------------------------------------------------------------* //
+
+
+function addExams(moduleId) {
+    const examQuery = query(global.examRef, where(global.courseModule, '==', moduleId));
+    onSnapshot(examQuery, (querySnapshot) => {
+        querySnapshot.forEach((docu) => {
+            if (document.getElementById(docu.id + "exam")) {
+                return;
+            }
+
+            const ddata = docu.data();
+            let card = document.createElement('div');
+            card.classList.add("card-exam");
+            let h4_1 = document.createElement('h4');
+            let h4_2 = document.createElement('h4');
+            let a = document.createElement('a');
+
+            let date = global.getExamDate(ddata).toDate()
+            h4_1.innerHTML = `<i class="icon fa fa-clock-o fa-fw "></i>` + date.toLocaleDateString('en-GB', {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+            a.innerHTML = `<i class="icon fa fa-graduation-cap fa-fw"></i>` + " " + global.getExamName(ddata);
+            a.href = "exam.html?id=" + docu.id + "&type=exam";
+            h4_2.innerHTML = `<i class="icon fa fa-align-left fa-fw "></i>` + " " + global.getExamDescription(ddata);
+            card.append(a, h4_1, h4_2);
+            card.id = docu.id + "exam";
+            listExams.appendChild(card);
+        });
+    });
+}
+
+
+// *-------------------------------------------------------------------------------* //
+// *-------------------------- Profile Redirection ----------------------------* //
+// *-------------------------------------------------------------------------------* //
+
+let userId = "null";
+
+profile.addEventListener('click', () => {
+    console.log("Profile clicked");
+
+    window.location.replace("./profile.html?id=" + userId);
+});
+
 
 // *-------------------------------------------------------------------------------* //
 // *-------------------------------------------------------------------------------* //
 // *----------------------- AUTHENTIFICATIONS -------------------------------* //
 // *-------------------------------------------------------------------------------* //
 // *-------------------------------------------------------------------------------* //
+
 
 
 onAuthStateChanged(auth, (user) => {
@@ -130,18 +305,26 @@ onAuthStateChanged(auth, (user) => {
         console.log("User logged in", user.uid);
         onSnapshot(userQuery, (querySnapshot) => {
             querySnapshot.forEach((docu) => {
+                userId = docu.id;
                 if (docu.data().role == "faculty") {
-                    window.location.replace("../faculty/dashboard.html");
                 }
                 else if (docu.data().role == "student") {
-                    window.location.replace("../user/dashboard.html");
+                    document.querySelector(".ext-courses").style.display = "block";
+                    document.querySelector(".container-exams").style.display = "block";
+                    global.showCourses(document.querySelector(".nav-extend"), document.querySelector(".toggle-all"), "./courses.html", "Courses");
+                    addCourses();
+                    console.log("student");
                 }
                 else {
-                    document.body.style.display = "block";
-                    addUserToList();
-                    addModulesToList();
                     console.log("admin");
+                    document.querySelector(".table-container").style.display = "block";
+                    document.querySelector(".modules-ui").style.display = "block";
+                    document.querySelector(".modules-header").innerHTML += `<div class="addModuleButton add-button" id="add-module" onclick="window.addModule.showModal()"><i
+                    class="fa fa-plus py-2 mr-3"></i></div>`
+                    addUserToList();
+                    addModulesToListAdmin();
                 }
+                document.body.style.display = "block";
             });
         }, (error) => {
             window.location.replace("login.html");

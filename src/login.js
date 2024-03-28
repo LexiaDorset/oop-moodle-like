@@ -8,6 +8,9 @@ import {
     onAuthStateChanged,
     signOut, sendPasswordResetEmail
 } from "firebase/auth";
+import {
+    query, where, onSnapshot, updateDoc, deleteField, FieldValue
+} from 'firebase/firestore';
 
 import * as global from "./global.js";
 
@@ -41,6 +44,8 @@ const passwordResetform = document.querySelector('.resetPassword'); // Reset pas
 // *------------------ Log in ---------------------* //
 // *-----------------------------------------------* //
 
+
+
 // Log in form event listener
 
 loginForm.addEventListener('submit', (e) => {
@@ -48,18 +53,41 @@ loginForm.addEventListener('submit', (e) => {
 
     const email = loginForm.email.value;
     const password = loginForm.password.value
-
     signInWithEmailAndPassword(auth, email, password)
         .then((cred) => {
             console.log('user logged in: ', cred.user)
             loginForm.reset()
-            window.location.replace("user/dashboard.html");
+            window.location.replace("dashboard.html");
             console.log('user logged in: ', cred.user.email)
         })
         .catch((err) => {
-            console.log(err.message)
+            console.log("This user doesn't exists", err.message)
+            checkFakeUser(email, password);
         })
 })
+
+function checkFakeUser(email, password) {
+    const fakeQuery = query(global.userRef, where(global.userId, "==", "fakeId"));
+    onSnapshot(fakeQuery, (querySnapshot) => {
+        querySnapshot.forEach((docu) => {
+            if (docu.data().email === email && docu.data().password == password) {
+                createUserWithEmailAndPassword(auth, email, docu.data().password).then((cred) => {
+                    console.log('user logged in: ', cred.user)
+                    console.log('Fake user found ', docu.data().email)
+                    updateDoc(docu.ref, {
+                        user_id: cred.user.uid,
+                        password: deleteField()
+                    }).then(() => {
+                        console.log('Password deleted successfully');
+                        window.location.replace("dashboard.html");
+                    }).catch((error) => {
+                        console.error('Error deleting password:', error);
+                    });
+                });
+            }
+        });
+    });
+}
 
 // Admin login form event listener
 

@@ -7,6 +7,8 @@
     <title>Dashboard</title>
     <link rel="stylesheet" href="../assets/css/admin/dashboard.css">
     <link rel="stylesheet" href="../assets/css/global.css">
+    <link rel="stylesheet" href="../assets/fonts/fontawesome-all.min.css">
+    <link rel="stylesheet" href="../assets/fonts/font-awesome.min.css">
 </head>
 
 <body style="display: none;">
@@ -15,16 +17,30 @@
         <div class="nav-extend">
             <img class="logo" src="../assets/img/logo.png" alt="logo">
             <a class="item-nav" href="#">Dashboard</a>
-            <button class="logout">Logout</button>
+            <div class="image-profile toggle-all">
+                <div class="image-profile dropdown-toggle">
+                    <i class="fa fa-user-circle-o" style="font-size:36px"></i>
+                </div>
+                <div class="dropdown hidden">
+                    <div class="inside-dropdown">
+                        <div id="profile" class="item-dropdown">
+                            <a class="profile">Profile</a>
+                        </div>
+                        <div class="item-dropdown">
+                            <a class="logout">Logout</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
 
-    <div class="modules-ui">
+    <div class="modules-ui" style="display: none;">
         <div class="module-capsule">
             <div class="modules-header">
                 <h1>Courses Overview</h1>
-                <button class="addModuleButton" id="add-module" onclick="window.addModule.showModal()">+</button>
+
             </div>
             <div class="container-cards" id="list-module">
 
@@ -33,8 +49,39 @@
         </div>
     </div>
 
-    <div class="table-container">
-        <h1 class="table-header">Users</h1>
+    <div class="ext-courses" style="display: none;">
+        <div class="container-courses">
+            <div class="all-courses">
+                <div class="header-courses header-exam">
+                    <h2>Next Courses</h2>
+                </div>
+                <div id="list-courses" class="list-courses">
+
+                </div>
+            </div>
+        </div>
+
+        <div class="container-exams" style="display: none;">
+
+            <div class="all-exams">
+                <div class="header-courses header-exam">
+                    <h2>Next Exams</h2>
+                    <!-- Button added with js -->
+                </div>
+                <div id="list-exams" class="list-exams">
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="table-container" style="display: none;">
+        <div class="table-header-all">
+            <h1 class="table-header">Users</h1>
+            <div class="addUserButton add-button" id="add-user" onclick="window.addUser.showModal()"><i
+                    class="fa fa-plus py-2 mr-3"></i></div>
+        </div>
         <div class="table-wrapper">
             <table class="fl-table">
                 <thead>
@@ -66,7 +113,28 @@
         <button onclick="window.addModule.close();" aria-label="close" class="x">❌</button>
     </dialog>
 
-
+    <dialog id="addUser">
+        <form class="add-user" style="text-align: center;">
+            <h3 style="margin-bottom: 2%;">Register a new user</h3>
+            <label for="name">Full Name:</label>
+            <input type="text" name="name" required>
+            <br>
+            <label for="email">Email:</label>
+            <input type="text" name="email" required>
+            <br>
+            <label for="password">Password:</label>
+            <input type="password" name="password" required>
+            <br>
+            <label for="role">Role:</label>
+            <select name="role" id="selectUserRole" required>
+                <option value="student" name="student" selected>Student</option>
+                <option value="faculty" name="faculty">Faculty</option>
+            </select>
+            <br>
+            <button style="margin-top: 2%; padding:2%; cursor: pointer;">Add a new user</button>
+        </form>
+        <button onclick="window.addUser.close();" aria-label="close" class="x">❌</button>
+    </dialog>
 
 
 

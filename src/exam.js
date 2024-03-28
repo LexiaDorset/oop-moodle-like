@@ -30,7 +30,13 @@ const exam = doc(global.examRef, examId);
 const headExam = document.getElementById('head-exam');
 const detailsExam = document.getElementById('details-exam');
 const detailsExamPlus = document.getElementById('details-exam-plus');
+const profile = document.getElementById('profile');
 
+const dropdownToggle = document.querySelector('.dropdown-toggle');
+dropdownToggle.addEventListener('click', () => {
+    const dropdownMenu = document.querySelector('.dropdown');
+    dropdownMenu.classList.toggle('hidden');
+});
 const listGrades = document.getElementById('list-grades');
 
 const examButton = document.getElementById('exam');
@@ -88,19 +94,6 @@ function addDetailsToExam() {
         addGrades();
     });
 }
-
-const editExamButton = document.getElementById('editButtonExam');
-editExamButton.addEventListener('click', () => {
-    onSnapshot(exam, (docu) => {
-        if (docu.exists()) {
-            let docuData = docu.data();
-            editExamForm.name.value = global.getExamName(docuData);
-            editExamForm.description.value = global.getExamDescription(docuData);
-            editExamForm.date.value = global.timeStampToDate(new Date(global.getExamDate(docuData).toDate()));
-        }
-    });
-});
-
 
 const buttonDeleteExam = document.getElementById('delete-exam')
 buttonDeleteExam.addEventListener('click', (e) => {
@@ -170,6 +163,24 @@ function addGrades() {
 }
 
 
+// *-------------------------------------------------------------------------------* //
+// *-------------------------- Profile Redirection ----------------------------* //
+// *-------------------------------------------------------------------------------* //
+
+let userId = "null";
+
+profile.addEventListener('click', () => {
+    console.log("Profile clicked");
+
+    window.location.replace("./profile.html?id=" + userId);
+});
+
+
+// *-------------------------------------------------------------------------------* //
+// *-------------------------- AUTHENTIFICATIONS ----------------------------* //
+// *-------------------------------------------------------------------------------* //
+
+
 onAuthStateChanged(auth, (user) => {
     //AuthChanges(user);
     if (user == null) {
@@ -181,13 +192,40 @@ onAuthStateChanged(auth, (user) => {
         console.log("User logged in", user.uid);
         onSnapshot(userQuery, (querySnapshot) => {
             querySnapshot.forEach((docu) => {
+                userId = docu.id;
                 if (docu.data().role == "faculty") {
-                    window.location.replace("../faculty/dashboard.html");
+                    window.location.replace("../dashboard.html");
                 }
                 else if (docu.data().role == "student") {
-                    window.location.replace("../user/dashboard.html");
+                    addDetailsToExam().then(() => {
+                        console.log("admin");
+                        document.body.style.display = "block";
+                        if (courseType == "exam") {
+                            document.querySelector(".details-exam").style.display = "block";
+                            examButton.classList.add("active");
+                        }
+                        else {
+                            document.querySelector(".table-wrapper").style.display = "block";
+                            gradesButton.classList.add("active");
+                        }
+                    }).catch((error) => {
+                        console.error("Error adding module details:", error);
+                    });
                 }
                 else {
+                    document.getElementById("h2-general").innerHTML = `General<i class="fas fa-edit edit-exam-i" id="editButtonExam"
+                    onclick="window.editExam.showModal()"></i>`;
+                    let editExamButton = document.getElementById('editButtonExam');
+                    editExamButton.addEventListener('click', () => {
+                        onSnapshot(exam, (docu) => {
+                            if (docu.exists()) {
+                                let docuData = docu.data();
+                                editExamForm.name.value = global.getExamName(docuData);
+                                editExamForm.description.value = global.getExamDescription(docuData);
+                                editExamForm.date.value = global.timeStampToDate(new Date(global.getExamDate(docuData).toDate()));
+                            }
+                        });
+                    });
                     addDetailsToExam().then(() => {
                         console.log("admin");
                         document.body.style.display = "block";

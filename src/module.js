@@ -20,7 +20,7 @@ import * as global from "./global.js";
 
 // Auth
 const auth = getAuth();
-
+let role = "";
 let params = new URLSearchParams(window.location.search);
 let moduleId = params.get('id');
 let courseType = params.get('type');
@@ -52,7 +52,13 @@ courseButton.href = "module.html" + "?id=" + moduleId + "&type=" + "course";
 const formCreateCourse = document.querySelector('.add-course');
 const formCreateExam = document.querySelector('.add-exam');
 
+const profile = document.getElementById('profile');
 
+const dropdownToggle = document.querySelector('.dropdown-toggle');
+dropdownToggle.addEventListener('click', () => {
+    const dropdownMenu = document.querySelector('.dropdown');
+    dropdownMenu.classList.toggle('hidden');
+});
 // *-------------------------------------------------------------------------------* //
 // *-------------------------- Create a new course ----------------------------* //
 // *-------------------------------------------------------------------------------* //
@@ -243,16 +249,17 @@ function addCourses() {
                     minute: '2-digit'
                 });
             }
+            if (role == "admin") {
+                let div = document.createElement('div');
+                div.addEventListener('click', () => {
+                    editDialogCourseUpdate(docu.id);
+                    window.editCourse.showModal();
+                });
+                div.innerHTML = `<i class="fas fa-edit"></i>`;
+                div.classList.add("edit-module");
+                h3.append(div);
+            }
 
-            let div = document.createElement('div');
-            div.addEventListener('click', () => {
-                editDialogCourseUpdate(docu.id);
-                window.editCourse.showModal();
-            });
-            div.innerHTML = `<i class="fas fa-edit"></i>`;
-            div.classList.add("edit-module");
-
-            h3.append(div);
             h4_2.innerText = "Description: " + global.getCourseDescription(ddata);
             card.append(h3, h4_1, h4_2);
             card.id = docu.id + "course";
@@ -397,6 +404,17 @@ formAddParticipant.addEventListener('submit', (e) => {
 });
 
 // *-------------------------------------------------------------------------------* //
+// *-------------------------- Profile Redirection ----------------------------* //
+// *-------------------------------------------------------------------------------* //
+
+let userId = "null";
+
+profile.addEventListener('click', () => {
+    window.location.replace("./profile.html?id=" + userId);
+});
+
+
+// *-------------------------------------------------------------------------------* //
 // *-------------------------------------------------------------------------------* //
 // *----------------------- AUTHENTIFICATIONS -------------------------------* //
 // *-------------------------------------------------------------------------------* //
@@ -414,13 +432,33 @@ onAuthStateChanged(auth, (user) => {
         console.log("User logged in", user.uid);
         onSnapshot(userQuery, (querySnapshot) => {
             querySnapshot.forEach((docu) => {
-                if (docu.data().role == "faculty") {
-                    window.location.replace("../faculty/dashboard.html");
+                userId = docu.id;
+                role = docu.data().role;
+                if (role == "faculty") {
+                    window.location.replace("../dashboard.html");
                 }
-                else if (docu.data().role == "student") {
-                    window.location.replace("../user/dashboard.html");
+                else if (role == "student") {
+                    addDetailsModule().then(() => {
+                        console.log("student");
+                        document.body.style.display = "block";
+                        if (courseType == "participants") {
+                            document.querySelector(".participants-page").style.display = "block";
+                            participantsButton.classList.add("active");
+                        }
+                        else {
+                            detailsModuleAll.style.display = "block";
+                            document.querySelector(".container-exams").style.display = "block";
+                            courseButton.classList.add("active");
+                        }
+                    }).catch((error) => {
+                        console.error("Error adding module details:", error);
+                    });
                 }
                 else {
+                    document.querySelector(".header-exam").innerHTML += `<div class="add-button" id="add-exam" onclick="window.addExam.showModal()"><i
+                    class="fa fa-plus py-2 mr-3"></i></div>`
+                    document.querySelector(".h-c").innerHTML += `<div class="add-button" id="add-course" onclick="window.addCourse.showModal()"> <i
+                    class="fa fa-plus py-2 mr-3"></i></div>`
                     addDetailsModule().then(() => {
                         console.log("admin");
                         document.body.style.display = "block";

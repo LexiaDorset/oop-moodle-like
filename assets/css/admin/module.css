@@ -107,9 +107,7 @@ h4 {
     padding: 1%;
 }
 
-.change-type .active {
-    border-bottom: 2px solid black;
-}
+
 
 .list-exams a {
     font-weight: 700;
@@ -140,11 +138,4 @@ h3 {
 button {
     padding: 1%;
     cursor: pointer;
-}
-
-.add-button {
-    cursor: pointer;
-    background-color: #e0e0e0;
-    border-radius: 10px;
-    padding: 0% 1% 0% 1%
 }

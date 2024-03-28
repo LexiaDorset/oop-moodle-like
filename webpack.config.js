@@ -9,11 +9,12 @@ module.exports = {
         module: './src/module.js',
         exam: './src/exam.js',
         profile: './src/profile.js',
+        courses: './src/courses.js',
     },
     output: {
         path: path.resolve(__dirname, 'dist'),
         filename: 'bundles/[name].bundle.js'
     },
     devtool: 'inline-source-map',
-    watch: true
+    watch: true,
 }

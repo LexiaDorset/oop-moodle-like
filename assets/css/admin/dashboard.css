@@ -16,10 +16,6 @@
 
 }
 
-body {
-    background-color: #efefef;
-}
-
 .card {
     width: 18rem;
     border: 1px solid rgba(0, 0, 0, .125);
@@ -52,6 +48,12 @@ body {
 
 .card a {
     font-size: 20px;
+    text-decoration: none;
+}
+
+.card a:hover {
+    text-decoration: underline;
+    color: #094478;
 }
 
 .card-text {
@@ -59,7 +61,6 @@ body {
 }
 
 .modules-ui {
-    background-color: #efefef;
     padding: 2% 0% 0% 0%;
 }
 
@@ -70,16 +71,19 @@ h1 {
 .modules-header {
     display: flex;
     gap: 10px;
-    padding: 1% 1% 0% 1%;
+    padding: 1%;
     align-items: center ! important;
+    border-bottom: 1px solid #a7a7a7;
 }
+
 
 .module-capsule {
     max-width: 905px;
     margin-left: auto;
     margin-right: auto;
-    background-color: white;
     border-radius: 5px;
+    border: 2px solid #dedede;
+    padding: 1%;
 }
 
 .addModuleButton {
@@ -88,4 +92,87 @@ h1 {
 
 .table-header {
     padding: 1%;
+}
+
+.table-header-all {
+    display: block ruby;
+}
+
+
+
+.header-courses {
+    display: flex;
+    gap: 10px;
+    padding: 1%;
+    align-items: center ! important;
+    border-bottom: 1px solid #a7a7a7;
+}
+
+.container-courses,
+.container-exams {
+    padding: 1%;
+}
+
+.list-courses a,
+.list-exams {
+    font-weight: 700;
+    font-size: 18px;
+    text-decoration: none;
+    color: #0a101f
+}
+
+.list-courses a:hover,
+.list-exams a:hover {
+    color: #324960;
+}
+
+
+.card-course,
+.card-exam {
+    display: inline-block;
+    border-bottom: 1px solid #a7a7a7;
+    padding: 1%;
+}
+
+.card-course>*:not(:last-child),
+.card-exam>*:not(:last-child) {
+    margin-bottom: 7px;
+}
+
+.list-courses,
+.list-exams {
+    display: grid;
+    flex-wrap: wrap;
+    gap: 4px;
+}
+
+.all-courses,
+.all-exams {
+    display: grid;
+    border: 2px solid #dedede;
+    border-radius: 5px;
+    padding: 1%;
+}
+
+.ext-courses {
+    max-width: 830px;
+    display: grid;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 2%;
+}
+
+.list-exams a {
+    font-weight: 700;
+    font-size: 18px;
+    text-decoration: none;
+    color: #0a101f
+}
+
+.list-exams a:hover {
+    color: #324960;
+}
+
+h4 {
+    font-weight: 500;
 }

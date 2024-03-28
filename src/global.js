@@ -201,3 +201,12 @@ export function getGradesGrade(data) {
 export function getGradesExamId(data) {
     return data.exam_id;
 }
+
+
+export function showCourses(doc1, doc2, link, name) {
+    let a = document.createElement("a");
+    a.classList.add("item-nav");
+    a.href = link;
+    a.innerText = name;
+    doc1.insertBefore(a, doc2);
+}
