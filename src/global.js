@@ -5,7 +5,9 @@ import {
     collection, query,
     getDocs
 } from 'firebase/firestore';
-import { getAuth, onAuthStateChanged, signInWithEmailAndPassword } from "firebase/auth";
+import {
+    signOut
+} from "firebase/auth";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -130,6 +132,11 @@ export const gradesUserId = "usermodule_id";
 export const gradesGrade = "grade";
 export const gradesExamId = "exam_id";
 
+// Roles
+export const roleAdmin = "admin";
+export const roleStudent = "student";
+export const roleFaculty = "faculty";
+
 // Modules get values
 export function getModuleName(data) {
     return data.name;
@@ -209,4 +216,21 @@ export function showCourses(doc1, doc2, link, name) {
     a.href = link;
     a.innerText = name;
     doc1.insertBefore(a, doc2);
+}
+
+export function navButton(profile, userId, dropdownToggle, dropdown, buttonLogout, auth) {
+    profile.addEventListener('click', () => {
+        window.location.replace("./profile.html?id=" + userId);
+    });
+    dropdownToggle.addEventListener('click', () => {
+        dropdown.classList.toggle('hidden');
+    });
+    buttonLogout.addEventListener("click", () => {
+        signOut(auth).then(() => {
+            window.location.replace("./login.html");
+            console.log("User signed out");
+        }).catch((error) => {
+            console.error(error);
+        });
+    });
 }

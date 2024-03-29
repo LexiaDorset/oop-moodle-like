@@ -1,0 +1,90 @@
+h4 {
+    font-weight: 500;
+}
+
+.table-wrapper {
+    max-width: 885px;
+    margin-left: auto;
+    margin-right: auto;
+    border: 1px solid black;
+}
+
+.table-container {
+    margin-top: 2%;
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 905px;
+    background-color: white;
+    border-radius: 5px;
+    padding-bottom: 1%;
+
+}
+
+.card {
+    width: 18rem;
+    border: 1px solid rgba(0, 0, 0, .125);
+    border-radius: .5rem;
+    padding: 1%;
+}
+
+.card-img-top {
+    width: 100%;
+    object-fit: cover;
+}
+
+
+.container-cards {
+    padding: 1%;
+    display: flex;
+    overflow-x: auto;
+    max-width: 905px;
+    margin-left: auto;
+    margin-right: auto;
+    background-color: white;
+    border-radius: 5px;
+    gap: 10px
+}
+
+.container-cards .card {
+    flex: 0 0 auto;
+    flex-shrink: 0;
+}
+
+.card a {
+    font-size: 20px;
+    text-decoration: none;
+}
+
+.card a:hover {
+    text-decoration: underline;
+    color: #094478;
+}
+
+.card-text {
+    margin-top: 2%;
+}
+
+.modules-ui {
+    padding: 2% 0% 0% 0%;
+}
+
+h1 {
+    font-size: 30px;
+}
+
+.module-capsule {
+    max-width: 905px;
+    margin-left: auto;
+    margin-right: auto;
+    border-radius: 5px;
+    border: 2px solid #dedede;
+    padding: 1%;
+}
+
+.table-header {
+    padding: 0% 0% 0% 1%;
+}
+
+.table-header-all {
+    display: block ruby;
+}

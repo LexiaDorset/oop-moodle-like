@@ -32,11 +32,6 @@ const detailsExam = document.getElementById('details-exam');
 const detailsExamPlus = document.getElementById('details-exam-plus');
 const profile = document.getElementById('profile');
 
-const dropdownToggle = document.querySelector('.dropdown-toggle');
-dropdownToggle.addEventListener('click', () => {
-    const dropdownMenu = document.querySelector('.dropdown');
-    dropdownMenu.classList.toggle('hidden');
-});
 const listGrades = document.getElementById('list-grades');
 
 const examButton = document.getElementById('exam');
@@ -169,12 +164,6 @@ function addGrades() {
 
 let userId = "null";
 
-profile.addEventListener('click', () => {
-    console.log("Profile clicked");
-
-    window.location.replace("./profile.html?id=" + userId);
-});
-
 
 // *-------------------------------------------------------------------------------* //
 // *-------------------------- AUTHENTIFICATIONS ----------------------------* //
@@ -193,12 +182,13 @@ onAuthStateChanged(auth, (user) => {
         onSnapshot(userQuery, (querySnapshot) => {
             querySnapshot.forEach((docu) => {
                 userId = docu.id;
-                if (docu.data().role == "faculty") {
+                global.navButton(profile, userId, document.querySelector('.dropdown-toggle'), document.querySelector('.dropdown'), document.querySelector(".logout"), auth);
+                if (docu.data().role == global.roleFaculty) {
                     window.location.replace("../dashboard.html");
                 }
-                else if (docu.data().role == "student") {
+                else if (docu.data().role == global.roleStudent) {
                     addDetailsToExam().then(() => {
-                        console.log("admin");
+                        console.log("student");
                         document.body.style.display = "block";
                         if (courseType == "exam") {
                             document.querySelector(".details-exam").style.display = "block";
@@ -213,7 +203,7 @@ onAuthStateChanged(auth, (user) => {
                     });
                 }
                 else {
-                    document.getElementById("h2-general").innerHTML = `General<i class="fas fa-edit edit-exam-i" id="editButtonExam"
+                    document.getElementById("h2-general").innerHTML = `General<i class="fas fa-edit edit-object" id="editButtonExam"
                     onclick="window.editExam.showModal()"></i>`;
                     let editExamButton = document.getElementById('editButtonExam');
                     editExamButton.addEventListener('click', () => {

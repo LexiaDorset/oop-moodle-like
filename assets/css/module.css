@@ -1,0 +1,27 @@
+h4 {
+    font-weight: 500;
+}
+
+dialog {
+    margin: auto;
+}
+
+.edit-module {
+    margin-left: auto;
+    cursor: pointer;
+}
+
+h3 {
+    display: flex;
+}
+
+.buttonAdd {
+    margin-left: auto;
+    margin-right: auto;
+    display: flex;
+}
+
+button {
+    padding: 1%;
+    cursor: pointer;
+}

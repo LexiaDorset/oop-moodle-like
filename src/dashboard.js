@@ -32,6 +32,7 @@ const listModules = document.getElementById('list-module');
 const listCourses = document.getElementById('list-courses');
 const listExams = document.getElementById('list-exams');
 
+const selectFaculty = document.getElementById('selectFaculty');
 
 // *-------------------------------------------------------------------------------* //
 // *-------------------------- Profile ----------------------------* //
@@ -39,22 +40,29 @@ const listExams = document.getElementById('list-exams');
 
 const profile = document.getElementById('profile');
 
-const dropdownToggle = document.querySelector('.dropdown-toggle');
-dropdownToggle.addEventListener('click', () => {
-    const dropdownMenu = document.querySelector('.dropdown');
-    dropdownMenu.classList.toggle('hidden');
-});
 
 // *-------------------------------------------------------------------------------* //
 // *-------------------------- Create a new module ----------------------------* //
 // *-------------------------------------------------------------------------------* //
 formCreateModule.addEventListener('submit', (e) => {
     e.preventDefault();
+    let faculty = selectFaculty.options[selectFaculty.selectedIndex].id.slice(0, -4);
     addDoc(global.moduleRef, {
         name: formCreateModule.name.value,
+        faculty_id: faculty,
+        description: formCreateModule.description.value,
     })
-        .then(() => {
-            console.log('Module added');
+        .then((docu) => {
+            addDoc(global.usermoduleRef, {
+                user_id: faculty,
+                module_id: docu.id,
+            })
+                .then(() => {
+                    console.log('UserModule added');
+                })
+                .catch((error) => {
+                    console.error('Error adding usermodule:', error);
+                });
         })
         .catch((error) => {
             console.error('Error adding module:', error);
@@ -74,18 +82,22 @@ function addUserToList() {
     onSnapshot(global.userRef, (querySnapshot) => {
         querySnapshot.forEach((docu) => {
             const ddata = docu.data();
-            if (global.getUserRole(ddata) == "admin") return;
+            let roleUser = global.getUserRole(ddata);
+            if (roleUser == global.roleAdmin) return;
+            if (roleUser == global.roleFaculty) {
+                addFacultyToSelect(global.getUserName(ddata), docu.id);
+            }
             let tr = document.createElement('tr');
             let a = document.createElement('a');
             let td = document.createElement('td');
             let td2 = document.createElement('td');
-            td2.innerText = global.getUserRole(ddata);
+            td2.innerText = roleUser;
             a.innerText = global.getUserName(ddata);
             a.href = "./profile.html?id=" + docu.id;
             td.append(a);
             tr.append(td, td2);
             listTeachers.appendChild(tr);
-            console.log("Teacher added");
+            console.log("User added");
         });
     });
 }
@@ -95,8 +107,10 @@ function addUserToList() {
 // *-------------------------------------------------------------------------------* //
 
 function addModulesToListd(ddata, docu) {
+    if (document.getElementById(docu.id + "module")) return;
     let div = document.createElement('div');
     div.classList.add("card");
+    div.id = docu.id + "module";
 
     let a1 = document.createElement('a');
     a1.href = "module.html?id=" + docu.id + "&type=course";
@@ -179,7 +193,7 @@ function addCourses() {
                     }
                     const ddata = docu.data();
                     let card = document.createElement('div');
-                    card.classList.add("card-course");
+                    card.classList.add("card-object");
                     let h6 = document.createElement('h6');
                     let name = "";
                     getDoc(doc(global.moduleRef, moduleId)).then((docu3) => {
@@ -250,7 +264,7 @@ function addExams(moduleId) {
 
             const ddata = docu.data();
             let card = document.createElement('div');
-            card.classList.add("card-exam");
+            card.classList.add("card-object");
             let h4_1 = document.createElement('h4');
             let h4_2 = document.createElement('h4');
             let a = document.createElement('a');
@@ -272,18 +286,25 @@ function addExams(moduleId) {
     });
 }
 
+// *-------------------------------------------------------------------------------* //
+// *-------------------------- Add Faculty to Select ----------------------------* //
+// *-------------------------------------------------------------------------------* //
+
+function addFacultyToSelect(name, key) {
+    if (document.getElementById(key + "addF")) return;
+    const option = document.createElement('option');
+    option.value = name;
+    option.text = name;
+    option.id = key + "addF";
+    selectFaculty.appendChild(option);
+}
+
 
 // *-------------------------------------------------------------------------------* //
 // *-------------------------- Profile Redirection ----------------------------* //
 // *-------------------------------------------------------------------------------* //
 
 let userId = "null";
-
-profile.addEventListener('click', () => {
-    console.log("Profile clicked");
-
-    window.location.replace("./profile.html?id=" + userId);
-});
 
 
 // *-------------------------------------------------------------------------------* //
@@ -306,9 +327,10 @@ onAuthStateChanged(auth, (user) => {
         onSnapshot(userQuery, (querySnapshot) => {
             querySnapshot.forEach((docu) => {
                 userId = docu.id;
-                if (docu.data().role == "faculty") {
+                global.navButton(profile, userId, document.querySelector('.dropdown-toggle'), document.querySelector('.dropdown'), document.querySelector(".logout"), auth);
+                if (docu.data().role == global.roleFaculty) {
                 }
-                else if (docu.data().role == "student") {
+                else if (docu.data().role == global.roleStudent) {
                     document.querySelector(".ext-courses").style.display = "block";
                     document.querySelector(".container-exams").style.display = "block";
                     global.showCourses(document.querySelector(".nav-extend"), document.querySelector(".toggle-all"), "./courses.html", "Courses");

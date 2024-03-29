@@ -5,8 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard</title>
-    <link rel="stylesheet" href="../assets/css/admin/dashboard.css">
     <link rel="stylesheet" href="../assets/css/global.css">
+    <link rel="stylesheet" href="../assets/css/dashboard.css">
     <link rel="stylesheet" href="../assets/fonts/fontawesome-all.min.css">
     <link rel="stylesheet" href="../assets/fonts/font-awesome.min.css">
 </head>
@@ -26,8 +26,8 @@
                         <div id="profile" class="item-dropdown">
                             <a class="profile">Profile</a>
                         </div>
-                        <div class="item-dropdown">
-                            <a class="logout">Logout</a>
+                        <div class="item-dropdown logout">
+                            <a>Logout</a>
                         </div>
                     </div>
                 </div>
@@ -38,7 +38,7 @@
 
     <div class="modules-ui" style="display: none;">
         <div class="module-capsule">
-            <div class="modules-header">
+            <div class="modules-header header-object">
                 <h1>Courses Overview</h1>
 
             </div>
@@ -49,26 +49,26 @@
         </div>
     </div>
 
-    <div class="ext-courses" style="display: none;">
-        <div class="container-courses">
-            <div class="all-courses">
-                <div class="header-courses header-exam">
+    <div class="ext-courses all-object" style="display: none;">
+        <div class="container-courses container-objects">
+            <div class="all-courses all-objects">
+                <div class="header-courses header-exam header-object">
                     <h2>Next Courses</h2>
                 </div>
-                <div id="list-courses" class="list-courses">
+                <div id="list-courses" class="list-courses list-objects">
 
                 </div>
             </div>
         </div>
 
-        <div class="container-exams" style="display: none;">
+        <div class="container-exams container-objects" style="display: none;">
 
-            <div class="all-exams">
+            <div class="all-exams all-objects">
                 <div class="header-courses header-exam">
                     <h2>Next Exams</h2>
                     <!-- Button added with js -->
                 </div>
-                <div id="list-exams" class="list-exams">
+                <div id="list-exams" class="list-exams list-objects">
 
                 </div>
             </div>
@@ -77,7 +77,7 @@
 
 
     <div class="table-container" style="display: none;">
-        <div class="table-header-all">
+        <div class="table-header-all header-object">
             <h1 class="table-header">Users</h1>
             <div class="addUserButton add-button" id="add-user" onclick="window.addUser.showModal()"><i
                     class="fa fa-plus py-2 mr-3"></i></div>
@@ -108,6 +108,13 @@
             <label for="name">Title:</label>
             <input type="text" name="name" required>
             <br>
+            <label for="description">Description:</label>
+            <input type="text" name="description" required>
+            <br>
+            <label for="faculty_id">Faculty:</label>
+            <select name="faculty_id" id="selectFaculty" required>
+            </select>
+            <br>
             <button style="margin-top: 2%; padding:2%; cursor: pointer;">Add a new module</button>
         </form>
         <button onclick="window.addModule.close();" aria-label="close" class="x">❌</button>
@@ -126,7 +133,7 @@
             <input type="password" name="password" required>
             <br>
             <label for="role">Role:</label>
-            <select name="role" id="selectUserRole" required>
+            <select name="role" required>
                 <option value="student" name="student" selected>Student</option>
                 <option value="faculty" name="faculty">Faculty</option>
             </select>

@@ -54,11 +54,6 @@ const formCreateExam = document.querySelector('.add-exam');
 
 const profile = document.getElementById('profile');
 
-const dropdownToggle = document.querySelector('.dropdown-toggle');
-dropdownToggle.addEventListener('click', () => {
-    const dropdownMenu = document.querySelector('.dropdown');
-    dropdownMenu.classList.toggle('hidden');
-});
 // *-------------------------------------------------------------------------------* //
 // *-------------------------- Create a new course ----------------------------* //
 // *-------------------------------------------------------------------------------* //
@@ -209,7 +204,7 @@ function addCourses() {
             }
             const ddata = docu.data();
             let card = document.createElement('div');
-            card.classList.add("card-course");
+            card.classList.add("card-object");
             let h4_1 = document.createElement('h4');
             let h4_2 = document.createElement('h4');
             let h3 = document.createElement('h3');
@@ -249,7 +244,7 @@ function addCourses() {
                     minute: '2-digit'
                 });
             }
-            if (role == "admin") {
+            if (role == global.roleAdmin) {
                 let div = document.createElement('div');
                 div.addEventListener('click', () => {
                     editDialogCourseUpdate(docu.id);
@@ -328,7 +323,7 @@ function addExams() {
 
             const ddata = docu.data();
             let card = document.createElement('div');
-            card.classList.add("card-exam");
+            card.classList.add("card-object");
             let h4_1 = document.createElement('h4');
             let h4_2 = document.createElement('h4');
             let a = document.createElement('a');
@@ -359,7 +354,7 @@ function addUsers() {
     onSnapshot(userQuery, (querySnapshot) => {
         querySnapshot.forEach((docu) => {
             const ddata = docu.data();
-            if (global.getUserRole(ddata) == "admin" || document.getElementById(docu.id + "parti") != null) {
+            if (global.getUserRole(ddata) == global.roleAdmin || document.getElementById(docu.id + "parti") != null) {
                 return;
             }
             else {
@@ -409,10 +404,6 @@ formAddParticipant.addEventListener('submit', (e) => {
 
 let userId = "null";
 
-profile.addEventListener('click', () => {
-    window.location.replace("./profile.html?id=" + userId);
-});
-
 
 // *-------------------------------------------------------------------------------* //
 // *-------------------------------------------------------------------------------* //
@@ -433,11 +424,12 @@ onAuthStateChanged(auth, (user) => {
         onSnapshot(userQuery, (querySnapshot) => {
             querySnapshot.forEach((docu) => {
                 userId = docu.id;
+                global.navButton(profile, userId, document.querySelector('.dropdown-toggle'), document.querySelector('.dropdown'), document.querySelector(".logout"), auth);
                 role = docu.data().role;
-                if (role == "faculty") {
+                if (role == global.roleFaculty) {
                     window.location.replace("../dashboard.html");
                 }
-                else if (role == "student") {
+                else if (role == global.roleStudent) {
                     addDetailsModule().then(() => {
                         console.log("student");
                         document.body.style.display = "block";

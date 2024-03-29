@@ -101,7 +101,7 @@ loginAdminForm.addEventListener('submit', (e) => {
         .then((cred) => {
             console.log('admin logged in: ', cred.user)
             loginAdminForm.reset()
-            window.location.replace("admin/dashboard.html");
+            window.location.replace("dashboard.html");
             console.log('admin logged in: ', cred.user.email)
         })
         .catch((err) => {

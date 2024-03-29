@@ -5,6 +5,10 @@
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 }
 
+/* --------------------------------- */
+/* -------------- Nav -------------- */
+/* --------------------------------- */
+
 .nav {
     background-color: #bababa;
     padding: 1%
@@ -32,7 +36,6 @@
     display: relative;
 }
 
-
 .dropdown-toggle::after {
     content: "";
     margin-right: 0;
@@ -51,7 +54,6 @@
 
 .image-profile .dropdown-toggle {
     cursor: pointer;
-    /* Ajout d'un curseur pointer pour indiquer qu'il est cliquable */
 }
 
 .dropdown {
@@ -65,9 +67,7 @@
     border-radius: 10px;
 }
 
-.hidden {
-    display: none;
-}
+
 
 .inside-dropdown {
     position: relative;
@@ -95,7 +95,9 @@
     width: 100%;
 }
 
-
+/* ----------------------------------- */
+/* ---------- General table ---------- */
+/* ----------------------------------- */
 
 .table-wrapper {
     margin: 2%;
@@ -126,7 +128,6 @@
     font-size: 12px;
 }
 
-
 .fl-table thead th {
     color: #ffffff;
     background: #324960;
@@ -134,7 +135,6 @@
 
 .fl-table thead th:not(:last-child) {
     border-right: 1px solid #000000;
-    /* Ajoutez cette ligne */
 }
 
 .fl-table tr:nth-child(even) {
@@ -144,6 +144,10 @@
 .fl-table tr:nth-child(even) {
     background: #F8F8F8;
 }
+
+/* ---------------------------------- */
+/* ------------ Dialog -------------- */
+/* ---------------------------------- */
 
 .x {
     position: absolute;
@@ -156,9 +160,135 @@ dialog {
     margin: auto;
 }
 
+/* ---------------------------------- */
+/* ---------- Add Button ------------ */
+/* ---------------------------------- */
+
 .add-button {
     cursor: pointer;
     background-color: #e0e0e0;
     border-radius: 10px;
     padding: 0% 1% 0% 1%
+}
+
+/* ----------------------------------- */
+/* ------------- General ------------- */
+/* ----------------------------------- */
+
+.hidden {
+    display: none;
+}
+
+
+/* ----------------------------------- */
+/* ------- General disposition ------- */
+/* ----------------------------------- */
+
+.all-object {
+    max-width: 830px;
+    display: grid;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 2%;
+}
+
+.nav-object {
+    border-bottom: 1px solid #a7a7a7;
+    align-items: center;
+    display: flex;
+    gap: 10px;
+}
+
+h1 {
+    font-size: 32px;
+    margin-bottom: 1%
+}
+
+.nav-object a {
+    padding: 2%;
+    text-decoration: none;
+    color: black;
+    cursor: pointer;
+}
+
+.nav-object a:hover {
+    background-color: #f8f8f8;
+}
+
+.nav-object a.active {
+    border-bottom: 2px solid black;
+}
+
+
+
+.header-object {
+    display: flex;
+    gap: 10px;
+    padding: 1%;
+    align-items: center ! important;
+    border-bottom: 1px solid #a7a7a7;
+}
+
+
+
+.details-object {
+    padding: 1%;
+}
+
+.details-object ul {
+    padding: 2%;
+}
+
+.details-object h2 {
+    font-size: 1.640625rem;
+    font-weight: 700;
+}
+
+
+.list-objects a {
+    font-weight: 700;
+    font-size: 18px;
+    text-decoration: none;
+    color: #0a101f
+}
+
+.list-objects a:hover {
+    color: #324960;
+}
+
+.container-objects {
+    padding: 1%;
+}
+
+.card-object,
+.card-object {
+    display: inline-block;
+    border-bottom: 1px solid #a7a7a7;
+    padding: 1%;
+}
+
+.card-object>*:not(:last-child),
+.card-object>*:not(:last-child) {
+    margin-bottom: 7px;
+}
+
+.list-objects,
+.list-objects {
+    display: grid;
+    flex-wrap: wrap;
+    gap: 4px;
+}
+
+.all-objects,
+.all-objects {
+    display: grid;
+    border: 2px solid #dedede;
+    border-radius: 5px;
+    padding: 1%;
+}
+
+
+.edit-object {
+    margin-left: 2%;
+    cursor: pointer;
 }

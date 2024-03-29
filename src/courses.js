@@ -27,13 +27,6 @@ const listModules = document.getElementById('list-module');
 
 const profile = document.getElementById('profile');
 
-const dropdownToggle = document.querySelector('.dropdown-toggle');
-dropdownToggle.addEventListener('click', () => {
-    const dropdownMenu = document.querySelector('.dropdown');
-    dropdownMenu.classList.toggle('hidden');
-});
-
-
 // *-------------------------------------------------------------------------------* //
 // *-------------------------- Add Modules to list all----------------------------* //
 // *-------------------------------------------------------------------------------* //
@@ -89,13 +82,6 @@ function addModulesToListStudent() {
 
 let userId = "null";
 
-profile.addEventListener('click', () => {
-    console.log("Profile clicked");
-
-    window.location.replace("./profile.html?id=" + userId);
-});
-
-
 // *-------------------------------------------------------------------------------* //
 // *-------------------------------------------------------------------------------* //
 // *----------------------- AUTHENTIFICATIONS -------------------------------* //
@@ -116,6 +102,7 @@ onAuthStateChanged(auth, (user) => {
         onSnapshot(userQuery, (querySnapshot) => {
             querySnapshot.forEach((docu) => {
                 userId = docu.id;
+                global.navButton(profile, userId, document.querySelector('.dropdown-toggle'), document.querySelector('.dropdown'), document.querySelector(".logout"), auth);
                 global.showCourses(document.querySelector(".nav-extend"), document.querySelector(".toggle-all"), "./courses.html", "Courses");
                 addModulesToListStudent();
                 document.body.style.display = "block";
