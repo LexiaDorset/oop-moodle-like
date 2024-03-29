@@ -43,7 +43,7 @@
         </div>
 
         <div class="details-module details-object" style="display: none;">
-            <h2>General</h2>
+            <h2 id="h2-general">General</h2>
             <div id="details-module">
             </div>
             <div class="all-courses all-objects">
@@ -76,7 +76,7 @@
             <div class="table-wrapper">
                 <table class="fl-table">
                     <thead>
-                        <tr>
+                        <tr id="tr-users">
                             <th>Full Name</th>
                             <th>Grades</th>
                             <th>Roles</th>
@@ -164,6 +164,25 @@
             <button style="margin-top: 2%; padding:2%; cursor: pointer;">Add this user to the course ?</button>
         </form>
         <button onclick="window.addParticipant.close();" aria-label="close" class="x">❌</button>
+    </dialog>
+
+    <dialog id="editModule">
+        <form class="edit-module" style="text-align: center;">
+            <h3 style="margin-bottom: 2%;">Edit the module</h3>
+            <label for="name">Title:</label>
+            <input type="text" name="name" required>
+            <br>
+            <label for="description">Description:</label>
+            <input type="text" name="description" required>
+            <br>
+            <label for="faculty_id">Faculty:</label>
+            <select name="faculty_id" id="selectFaculty" required>
+            </select>
+            <br>
+            <button style="margin-top: 2%; padding:2%; cursor: pointer;">Update</button>
+        </form>
+        <button id="delete-module">Delete this Exam</button>
+        <button onclick="window.editModule.close();" aria-label="close" class="x">❌</button>
     </dialog>
 
     <script src="bundles/module.bundle.js"></script>

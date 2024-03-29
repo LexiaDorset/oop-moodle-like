@@ -95,16 +95,13 @@ buttonDeleteExam.addEventListener('click', (e) => {
     e.preventDefault();
 
     if (window.confirm("Are you sure you want to delete this exam?") == false) return;
-    deleteDoc(doc(global.examRef, examId))
-        .then(() => {
-            console.log('Course deleted');
-            window.location.replace("module.html?id=" + moduleId);
-        })
-        .catch((error) => {
-            console.error('Error deleting Course:', error);
-        });
-    window.editCourse.close();
-
+    global.deleteExam(examId).then(() => {
+        console.log('Course deleted');
+        window.editExam.close();
+        window.location.replace("module.html?id=" + moduleId);
+    }).catch((error) => {
+        console.error('Error deleting Exam:', error);
+    });
 });
 
 

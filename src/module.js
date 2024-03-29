@@ -160,6 +160,9 @@ function addParticipants() {
                 const userId = global.getUserModuleUserId(ddata);
                 getDoc(doc(global.userRef, userId)).then((docu) => {
                     if (docu.exists()) {
+                        if (document.getElementById(docu.id + "parti") != null) {
+                            return;
+                        }
                         let docuData = docu.data();
                         let tr = document.createElement('tr');
                         tr.id = userId + "parti";
@@ -176,6 +179,16 @@ function addParticipants() {
                             td3.innerText = "-"
                         } else { td3.innerText = gradeUser; }
                         tr.append(td, td3, td2);
+                        if (role == global.roleAdmin || role == global.roleFaculty) {
+                            let td4 = document.createElement('td');
+                            let i = document.createElement('i');
+                            i.classList.add("fas", "fa-trash-alt");
+                            i.onclick = function () {
+                                deleteParticipant(userId);
+                            };
+                            td4.append(i);
+                            tr.append(td4);
+                        }
                         listParticipants.appendChild(tr);
                         if (++count == totalSize) resolve();
                     } else {
@@ -193,6 +206,17 @@ function addParticipants() {
         });
     });
 }
+
+function deleteParticipant(userId) {
+    if (window.confirm("Are you sure you want to delete this user from this module?") == false) return;
+    global.deleteModuleUser(moduleId, userId).then(() => {
+        console.log('User module deleted');
+        document.getElementById(userId + "parti").remove();
+    }).catch((error) => {
+        console.error('Error deleting Exam:', error);
+    });
+}
+
 
 function addCourses() {
     const courseQuery = query(global.courseRef, where(global.courseModule, '==', moduleId));
@@ -354,7 +378,13 @@ function addUsers() {
     onSnapshot(userQuery, (querySnapshot) => {
         querySnapshot.forEach((docu) => {
             const ddata = docu.data();
-            if (global.getUserRole(ddata) == global.roleAdmin || document.getElementById(docu.id + "parti") != null) {
+            if (global.getUserRole(ddata) == global.roleFaculty) {
+                addFacultyToSelect(global.getUserName(ddata), docu.id);
+            }
+            else if (global.getUserRole(ddata) == global.roleAdmin) {
+                return;
+            }
+            if (document.getElementById(docu.id + "parti") != null) {
                 return;
             }
             else {
@@ -399,6 +429,40 @@ formAddParticipant.addEventListener('submit', (e) => {
 });
 
 // *-------------------------------------------------------------------------------* //
+// *-------------------------- Add Faculty to Select ----------------------------* //
+// *-------------------------------------------------------------------------------* //
+let selectFaculty = document.getElementById('selectFaculty');
+
+function addFacultyToSelect(name, key) {
+    if (document.getElementById(key + "addF")) return;
+    const option = document.createElement('option');
+    option.value = name;
+    option.text = name;
+    option.id = key + "addF";
+    selectFaculty.appendChild(option);
+}
+
+// *-------------------------------------------------------------------------------* //
+// *-------------------------- Delete Module ----------------------------* //
+// *-------------------------------------------------------------------------------* //
+
+const buttonDeleteModule = document.getElementById('delete-module')
+buttonDeleteModule.addEventListener('click', (e) => {
+    e.preventDefault();
+
+    if (window.confirm("Are you sure you want to delete this module?") == false) return;
+    global.deleteModule(moduleId).then(() => {
+        // Delete tous les users, exams et courses attachés °E°
+        console.log('Module deleted');
+        window.location.replace("./dashboard.html");
+    }).catch((error) => {
+        console.error('Error deleting Module:', error);
+    });
+    window.editCourse.close();
+});
+
+
+// *-------------------------------------------------------------------------------* //
 // *-------------------------- Profile Redirection ----------------------------* //
 // *-------------------------------------------------------------------------------* //
 
@@ -411,6 +475,7 @@ let userId = "null";
 // *-------------------------------------------------------------------------------* //
 // *-------------------------------------------------------------------------------* //
 
+let editModuleForm = document.querySelector('.edit-module');
 
 onAuthStateChanged(auth, (user) => {
     //AuthChanges(user);
@@ -447,11 +512,32 @@ onAuthStateChanged(auth, (user) => {
                     });
                 }
                 else {
+                    let th = document.createElement('th');
+                    th.innerText = "Delete";
+                    document.getElementById("tr-users").append(th);
+
+
+                    document.getElementById("h2-general").innerHTML = `General<i class="fas fa-edit edit-object" id="editButtonModule"
+                    onclick="window.editModule.showModal()"></i>`;
+                    let editModuleButton = document.getElementById('editButtonModule');
+
+
                     document.querySelector(".header-exam").innerHTML += `<div class="add-button" id="add-exam" onclick="window.addExam.showModal()"><i
                     class="fa fa-plus py-2 mr-3"></i></div>`
                     document.querySelector(".h-c").innerHTML += `<div class="add-button" id="add-course" onclick="window.addCourse.showModal()"> <i
                     class="fa fa-plus py-2 mr-3"></i></div>`
                     addDetailsModule().then(() => {
+                        editModuleButton.addEventListener('click', () => {
+                            onSnapshot(module, (docu2) => {
+                                if (docu2.exists()) {
+                                    let docuData = docu2.data();
+                                    editModuleForm.name.value = global.getModuleName(docuData);
+                                    editModuleForm.description.value = global.getModuleDescription(docuData);
+                                    document.getElementById(global.getModuleFacultyId(docuData) + "addF").selected = true;
+                                }
+                            });
+                        });
+
                         console.log("admin");
                         document.body.style.display = "block";
                         if (courseType == "participants") {

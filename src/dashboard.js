@@ -69,6 +69,7 @@ formCreateModule.addEventListener('submit', (e) => {
         });
     console.log("test");
     formCreateModule.reset();
+    window.addModule.close();
 });
 
 
