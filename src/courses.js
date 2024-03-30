@@ -31,7 +31,7 @@ const profile = document.getElementById('profile');
 // *-------------------------- Add Modules to list all----------------------------* //
 // *-------------------------------------------------------------------------------* //
 
-function addModulesToListd(ddata, docu) {
+function addModulesToList(ddata, docu) {
     let div = document.createElement('div');
     div.classList.add("card");
 
@@ -69,7 +69,7 @@ function addModulesToListStudent() {
     onSnapshot(userModuleQuery, (querySnapshot) => {
         querySnapshot.forEach((docu2) => {
             getDoc(doc(global.moduleRef, global.getUserModuleId(docu2.data()))).then((docu) => {
-                addModulesToListd(docu.data(), docu)
+                addModulesToList(docu.data(), docu)
             });
         });
     });
@@ -102,7 +102,7 @@ onAuthStateChanged(auth, (user) => {
         onSnapshot(userQuery, (querySnapshot) => {
             querySnapshot.forEach((docu) => {
                 userId = docu.id;
-                global.navButton(profile, userId, document.querySelector('.dropdown-toggle'), document.querySelector('.dropdown'), document.querySelector(".logout"), auth);
+                global.navButton(profile, userId, document.querySelector('.dropdown-toggle'), document.querySelector('.dropdown'), document.querySelector(".logout"), auth, false);
                 global.showCourses(document.querySelector(".nav-extend"), document.querySelector(".toggle-all"), "./courses.html", "Courses");
                 addModulesToListStudent();
                 document.body.style.display = "block";

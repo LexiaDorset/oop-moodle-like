@@ -12,11 +12,14 @@
 </head>
 
 <body style="display: none;">
+
     <div class="nav">
         <div class="nav-extend">
-            <img class="logo" src="../assets/img/logo.png" alt="logo">
+            <a style="display:flex" href="dashboard.html">
+                <img class="logo" src="../assets/img/logo.png" alt="logo">
+            </a>
             <a class="item-nav" href="dashboard.html">Dashboard</a>
-            <div class="image-profile">
+            <div class="image-profile toggle-all">
                 <div class="image-profile dropdown-toggle">
                     <i class="fa fa-user-circle-o" style="font-size:36px"></i>
                 </div>
@@ -57,7 +60,7 @@
             </div>
         </div>
 
-        <div class="container-exams container-objects" style="display: none;">
+        <div class="container-exams container-objects final-part" style="display: none;">
 
             <div class="all-exams all-objects">
                 <div class="header-courses header-exam header-object">
@@ -99,16 +102,13 @@
     <dialog id="addCourse">
         <form class="add-course" style="text-align: center;">
             <h3 style="margin-bottom: 2%;">Create a new course</h3>
-            <br>
             <label for="start_date">Start Date</label>
             <input type="datetime-local" name="start_date" required>
-            <br>
             <label for="end_date">End Date</label>
             <input type="datetime-local" name="end_date" required>
-            <br>
             <label for="description">Description</label>
-            <input type="text" name="description" value="Class description">
-            <br>
+            <textarea type="text" name="description" placeholder="Add a more detailed description..."
+                required></textarea>
             <button style="margin-top: 2%; padding:2%; cursor: pointer;">Add a new course</button>
         </form>
         <button onclick="window.addCourse.close();" aria-label="close" class="x">❌</button>
@@ -117,16 +117,13 @@
     <dialog id="addExam">
         <form class="add-exam" style="text-align: center;">
             <h3 style="margin-bottom: 2%;">Create a new exam</h3>
-            <br>
             <label for="date">Date</label>
             <input type="date" name="date" required>
-            <br>
             <label for="name">Name</label>
             <input type="text" name="name">
-            <br>
             <label for="description">Description</label>
-            <input type="text" name="description">
-            <br>
+            <textarea type="text" name="description" placeholder="Add a more detailed description..."
+                required></textarea>
             <button style="margin-top: 2%; padding:2%; cursor: pointer;">Add a new exam</button>
         </form>
         <button onclick="window.addExam.close();" aria-label="close" class="x">❌</button>
@@ -136,52 +133,43 @@
     <dialog id="editCourse">
         <form class="edit-course" style="text-align: center;">
             <h3 style="margin-bottom: 2%;">Edit this course</h3>
-            <br>
             <label for="start_date">Start Date</label>
             <input type="datetime-local" name="start_date" required>
-            <br>
             <label for="end_date">End Date</label>
             <input type="datetime-local" name="end_date" required>
-            <br>
             <label for="description">Description</label>
-            <input type="text" name="description" value="Class description">
-            <br>
+            <textarea type="text" name="description" placeholder="Add a more detailed description..."
+                required></textarea>
             <button onclick="window.editCourse.close()" style="margin-top: 2%; padding:2%; cursor: pointer;">Update this
                 course</button>
         </form>
-        <button id="delete-course">Delete this course</button>
         <button onclick="window.editCourse.close();" aria-label="close" class="x">❌</button>
     </dialog>
 
     <dialog id="addParticipant">
-        <form class="add-participant" style="text-align: center;">
+        <form class="add-participant">
             <h3 style="margin-bottom: 2%;">Add a user to the course</h3>
-            <br>
             <label for="user">User</label>
             <select name="user" id="selectUserAdd" required>
             </select>
-            <br>
-            <button style="margin-top: 2%; padding:2%; cursor: pointer;">Add this user to the course ?</button>
+            <button>Add this user</button>
         </form>
         <button onclick="window.addParticipant.close();" aria-label="close" class="x">❌</button>
     </dialog>
 
     <dialog id="editModule">
-        <form class="edit-module" style="text-align: center;">
+        <form class="edit-module">
             <h3 style="margin-bottom: 2%;">Edit the module</h3>
-            <label for="name">Title:</label>
+            <label for="name">Title</label>
             <input type="text" name="name" required>
-            <br>
-            <label for="description">Description:</label>
-            <input type="text" name="description" required>
-            <br>
-            <label for="faculty_id">Faculty:</label>
+            <label for="description">Description</label>
+            <textarea type="text" name="description" placeholder="Add a more detailed description..."
+                required></textarea>
+            <label for="faculty_id">Faculty</label>
             <select name="faculty_id" id="selectFaculty" required>
             </select>
-            <br>
-            <button style="margin-top: 2%; padding:2%; cursor: pointer;">Update</button>
+            <button>Update</button>
         </form>
-        <button id="delete-module">Delete this Exam</button>
         <button onclick="window.editModule.close();" aria-label="close" class="x">❌</button>
     </dialog>
 

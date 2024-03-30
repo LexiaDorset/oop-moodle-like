@@ -124,7 +124,7 @@
 }
 
 .fl-table td {
-    border-right: 1px solid #f8f8f8;
+    border-right: 1px solid #c8c8c8;
     font-size: 12px;
 }
 
@@ -149,15 +149,97 @@
 /* ------------ Dialog -------------- */
 /* ---------------------------------- */
 
-.x {
-    position: absolute;
-    top: 10px;
-    right: 10px;
+form {
+    text-align: center;
+}
+
+form h3 {
+    justify-content: center;
+}
+
+dialog {
+    .x {
+        filter: grayscale(1);
+        border: none;
+        background: none;
+        position: absolute;
+        top: 15px;
+        right: 10px;
+        transition: ease filter, transform 0.3s;
+        cursor: pointer;
+        transform-origin: center;
+    }
 }
 
 dialog {
     padding: 1%;
     margin: auto;
+    min-width: 500px;
+    max-width: 500px;
+    border-radius: 12px;
+    border: 1px solid #ccc;
+}
+
+dialog {
+    .x {
+        &:hover {
+            filter: grayscale(0);
+            transform: scale(1.1);
+        }
+    }
+}
+
+dialog button:not(.x) {
+    margin-top: 2%;
+    padding: 10px;
+    cursor: pointer;
+    background-color: #253fa9;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+dialog button:hover:not(.x) {
+    background-color: #334e77;
+}
+
+
+dialog label {
+    display: block;
+    margin-bottom: 5px;
+    display: flex;
+}
+
+dialog input {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    outline: none;
+    padding: 8px;
+}
+
+dialog textarea {
+    height: 100px;
+    width: 100%;
+    resize: none;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    outline: none;
+    padding: 8px;
+    margin-bottom: 10px;
+}
+
+
+dialog select {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    display: flex;
 }
 
 /* ---------------------------------- */
@@ -179,6 +261,15 @@ dialog {
     display: none;
 }
 
+td a {
+    text-decoration: none;
+    color: #125997;
+}
+
+td a:hover {
+    text-decoration: underline;
+    color: #094478;
+}
 
 /* ----------------------------------- */
 /* ------- General disposition ------- */
@@ -201,7 +292,7 @@ dialog {
 
 h1 {
     font-size: 32px;
-    margin-bottom: 1%
+    margin-bottom: 0.5%
 }
 
 .nav-object a {
@@ -291,4 +382,13 @@ h1 {
 .edit-object {
     margin-left: 2%;
     cursor: pointer;
+}
+
+.delete-object {
+    margin-left: 1%;
+    cursor: pointer;
+}
+
+.final-part {
+    margin-bottom: 3%;
 }

@@ -6,8 +6,12 @@ dialog {
     margin: auto;
 }
 
-.edit-module {
+.buttons-course {
     margin-left: auto;
+    display: flex;
+}
+
+.button-object {
     cursor: pointer;
 }
 
@@ -24,4 +28,8 @@ h3 {
 button {
     padding: 1%;
     cursor: pointer;
+}
+
+.delete-margin {
+    margin-left: 10%;
 }

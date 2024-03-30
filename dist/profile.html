@@ -12,11 +12,14 @@
 </head>
 
 <body style="display: none;">
+
     <div class="nav">
         <div class="nav-extend">
-            <img class="logo" src="../assets/img/logo.png" alt="logo">
+            <a style="display:flex" href="dashboard.html">
+                <img class="logo" src="../assets/img/logo.png" alt="logo">
+            </a>
             <a class="item-nav" href="dashboard.html">Dashboard</a>
-            <div class="image-profile">
+            <div class="image-profile toggle-all">
                 <div class="image-profile dropdown-toggle">
                     <i class="fa fa-user-circle-o" style="font-size:36px"></i>
                 </div>
@@ -33,7 +36,6 @@
             </div>
         </div>
     </div>
-
     <div class="all-profile all-object">
 
         <div id="head-profile"></div>
@@ -56,7 +58,7 @@
             <div class="table-wrapper">
                 <table class="fl-table">
                     <thead>
-                        <tr>
+                        <tr id="tr-modules">
                             <th>Module name</th>
                             <th>Grade</th>
                         </tr>
@@ -85,19 +87,14 @@
     <dialog id="editUser">
         <form class="edit-user" style="text-align: center;">
             <h3 style="margin-bottom: 2%;">Edit this user</h3>
-            <label for="name">Full Name:</label>
+            <label for="name">Full Name</label>
             <input type="text" name="name" required>
-            <br>
-            <label for="email">Email:</label>
-            <input type="text" name="email" required>
-            <br>
-            <label for="role">Role:</label>
+            <label for="role">Role</label>
             <select name="role" id="selectUserEdit" required>
                 <option value="student" name="student">Student</option>
                 <option value="faculty" name="faculty">Faculty</option>
             </select>
-            <br>
-            <button style="margin-top: 2%; padding:2%; cursor: pointer;">Edit this user</button>
+            <button>Update</button>
         </form>
         <button onclick="window.editUser.close();" aria-label="close" class="x">❌</button>
     </dialog>
@@ -105,16 +102,13 @@
     <dialog id="editUserU">
         <form class="edit-user-u" style="text-align: center;">
             <h3 style="margin-bottom: 2%;">Edit profile</h3>
-            <label for="name">Full Name:</label>
+            <label for="name">Full Name</label>
             <input type="text" name="name" required>
-            <br>
-            <label for="email">Email:</label>
+            <label for="email">Email</label>
             <input type="text" name="email" required>
-            <br>
-            <label for="password">Password:</label>
+            <label for="password">Password</label>
             <input type="password" name="password" required>
-            <br>
-            <button style="margin-top: 2%; padding:2%; cursor: pointer;">Update</button>
+            <button>Update</button>
         </form>
         <button onclick="window.editUserU.close();" aria-label="close" class="x">❌</button>
     </dialog>

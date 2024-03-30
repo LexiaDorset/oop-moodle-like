@@ -47,7 +47,6 @@ const participantsButton = document.getElementById('participants');
 participantsButton.href = "module.html" + "?id=" + moduleId + "&type=" + "participants";
 courseButton.href = "module.html" + "?id=" + moduleId + "&type=" + "course";
 
-
 // Forms
 const formCreateCourse = document.querySelector('.add-course');
 const formCreateExam = document.querySelector('.add-exam');
@@ -106,22 +105,25 @@ function addDetailsModule() {
         let li1 = document.createElement('li');
         let h1 = document.createElement('h1');
         let li3 = document.createElement('li');
+        let li2 = document.createElement('li');
 
         getDoc(module).then((docu) => {
             if (docu.exists()) {
                 let docuData = docu.data();
-                li1.innerText = "Module Title: " + global.getModuleName(docuData);
+                li1.innerHTML = "Module title: " + `<strong>` + global.getModuleName(docuData) + `</strong>`;
                 document.title = "Course: " + global.getModuleName(docuData);
                 h1.innerText = global.getModuleName(docuData);
                 let teacher = doc(global.userRef, docuData.faculty_id);
                 getDoc(teacher).then((teacherDoc) => {
                     if (teacherDoc.exists()) {
                         let teacherData = teacherDoc.data();
-                        li3.innerText += "Teacher: " + global.getUserName(teacherData);
+                        li3.innerHTML += "Lecturer name: " + `<strong>` + global.getUserName(teacherData) + `</strong>`;
+                        li2.innerHTML = "Lecturer email: " + `<strong>` + global.getUserEmail(teacherData) + `</strong>`;
                     } else {
-                        li3.innerText += "Teacher not found";
+                        li3.innerHTML += "Teacher not found";
+                        li2.innerHTML = "Email not found";
                     }
-                    ul.append(li1, li3);
+                    ul.append(li1, li3, li2);
                     detailsModule.append(ul);
                     resolve();
                 }).catch((error) => {
@@ -202,7 +204,6 @@ function addParticipants() {
                 });
             });
             if (count == totalSize) resolve();
-
         });
     });
 }
@@ -244,7 +245,7 @@ function addCourses() {
                 }) + ', ' + date.toLocaleTimeString('en-GB', {
                     hour: '2-digit',
                     minute: '2-digit'
-                }) + " ► " + date.toLocaleTimeString('en-GB', {
+                }) + " ► " + date2.toLocaleTimeString('en-GB', {
                     hour: '2-digit',
                     minute: '2-digit'
                 });
@@ -269,14 +270,31 @@ function addCourses() {
                 });
             }
             if (role == global.roleAdmin) {
+                let divSup = document.createElement('div');
                 let div = document.createElement('div');
+                let div2 = document.createElement('div');
+                div2.classList.add("delete-margin");
                 div.addEventListener('click', () => {
                     editDialogCourseUpdate(docu.id);
                     window.editCourse.showModal();
                 });
-                div.innerHTML = `<i class="fas fa-edit"></i>`;
-                div.classList.add("edit-module");
-                h3.append(div);
+                div.innerHTML = `<i class="fas fa-edit button-object "></i>`;
+                div2.innerHTML = `<i class="fas fa-trash-alt button-object"></i>`;
+                div2.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    if (window.confirm("Are you sure you want to delete this course?") == false) return;
+                    deleteDoc(doc(global.courseRef, docu.id))
+                        .then(() => {
+                            console.log('Course deleted');
+                        })
+                        .catch((error) => {
+                            console.error('Error deleting Course:', error);
+                        });
+                    window.editCourse.close();
+                });
+                divSup.classList.add("buttons-course");
+                divSup.append(div, div2);
+                h3.append(divSup);
             }
 
             h4_2.innerText = "Description: " + global.getCourseDescription(ddata);
@@ -286,19 +304,6 @@ function addCourses() {
         });
     });
 }
-const buttonDeleteCourse = document.getElementById('delete-course')
-buttonDeleteCourse.addEventListener('click', (e) => {
-    e.preventDefault();
-    if (window.confirm("Are you sure you want to delete this course?") == false) return;
-    deleteDoc(doc(global.courseRef, buttonDeleteCourse.id.slice(0, -7)))
-        .then(() => {
-            console.log('Course deleted');
-        })
-        .catch((error) => {
-            console.error('Error deleting Course:', error);
-        });
-    window.editCourse.close();
-});
 
 
 // Usage
@@ -308,7 +313,6 @@ function editDialogCourseUpdate(key) {
     getDoc(courseQuery).then((docu) => {
         if (docu.exists()) {
             const ddata = docu.data();
-            buttonDeleteCourse.id = key + "dCourse";
             editCourseForm.start_date.value = global.timeStampToDateLocal(global.getCourseStartDate(ddata).toDate());
             editCourseForm.end_date.value = global.timeStampToDateLocal(global.getCourseEndDate(ddata).toDate());
             editCourseForm.description.value = global.getCourseDescription(ddata);
@@ -361,7 +365,11 @@ function addExams() {
             });
             a.innerHTML = `<i class="icon fa fa-graduation-cap fa-fw"></i>` + " " + global.getExamName(ddata);
             a.href = "exam.html?id=" + docu.id + "&type=exam";
-            h4_2.innerHTML = `<i class="icon fa fa-align-left fa-fw "></i>` + " " + global.getExamDescription(ddata);
+            let description = global.getExamDescription(ddata);
+            if (description.length > 100) {
+                description = description.substring(0, 100) + "...";
+            }
+            h4_2.innerHTML = `<i class="icon fa fa-align-left fa-fw "></i>` + " " + description;
             card.append(a, h4_1, h4_2);
             card.id = docu.id + "exam";
             listExams.appendChild(card);
@@ -446,19 +454,25 @@ function addFacultyToSelect(name, key) {
 // *-------------------------- Delete Module ----------------------------* //
 // *-------------------------------------------------------------------------------* //
 
-const buttonDeleteModule = document.getElementById('delete-module')
-buttonDeleteModule.addEventListener('click', (e) => {
-    e.preventDefault();
 
-    if (window.confirm("Are you sure you want to delete this module?") == false) return;
-    global.deleteModule(moduleId).then(() => {
-        // Delete tous les users, exams et courses attachés °E°
-        console.log('Module deleted');
-        window.location.replace("./dashboard.html");
-    }).catch((error) => {
-        console.error('Error deleting Module:', error);
-    });
-    window.editCourse.close();
+
+let editModuleForm = document.querySelector('.edit-module');
+
+editModuleForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    updateDoc(module, {
+        name: editModuleForm.name.value,
+        description: editModuleForm.description.value,
+        faculty_id: selectFaculty.options[selectFaculty.selectedIndex].id.slice(0, -4),
+    })
+        .then(() => {
+            console.log('Module updated');
+        })
+        .catch((error) => {
+            console.error('Error updating Module:', error);
+        });
+    editModuleForm.reset();
+    window.editModule.close();
 });
 
 
@@ -475,7 +489,7 @@ let userId = "null";
 // *-------------------------------------------------------------------------------* //
 // *-------------------------------------------------------------------------------* //
 
-let editModuleForm = document.querySelector('.edit-module');
+
 
 onAuthStateChanged(auth, (user) => {
     //AuthChanges(user);
@@ -489,12 +503,23 @@ onAuthStateChanged(auth, (user) => {
         onSnapshot(userQuery, (querySnapshot) => {
             querySnapshot.forEach((docu) => {
                 userId = docu.id;
-                global.navButton(profile, userId, document.querySelector('.dropdown-toggle'), document.querySelector('.dropdown'), document.querySelector(".logout"), auth);
+
                 role = docu.data().role;
+                global.navButton(profile, userId, document.querySelector('.dropdown-toggle'), document.querySelector('.dropdown'), document.querySelector(".logout"), auth, role == global.roleAdmin);
                 if (role == global.roleFaculty) {
-                    window.location.replace("../dashboard.html");
+                    global.showCourses(document.querySelector(".nav-extend"), document.querySelector(".toggle-all"), "./courses.html", "Courses");
+                    //Check if the faculty id of the module is the same as the faculty id of the user
+                    getDoc(module).then((docu) => {
+                        if (docu.exists()) {
+                            let docuData = docu.data();
+                            if (docuData.faculty_id != userId) {
+                                window.location.replace("dashboard.html");
+                            }
+                        }
+                    });
+                    console.log("faculty");
                 }
-                else if (role == global.roleStudent) {
+                if (role == global.roleStudent) {
                     addDetailsModule().then(() => {
                         console.log("student");
                         document.body.style.display = "block";
@@ -518,9 +543,21 @@ onAuthStateChanged(auth, (user) => {
 
 
                     document.getElementById("h2-general").innerHTML = `General<i class="fas fa-edit edit-object" id="editButtonModule"
-                    onclick="window.editModule.showModal()"></i>`;
+                    onclick="window.editModule.showModal()"></i><i class="fas fa-trash-alt delete-object" id="delete-module"></i>`;
                     let editModuleButton = document.getElementById('editButtonModule');
+                    const buttonDeleteModule = document.getElementById('delete-module')
+                    buttonDeleteModule.addEventListener('click', (e) => {
+                        e.preventDefault();
 
+                        if (window.confirm("Are you sure you want to delete this module?") == false) return;
+                        global.deleteModule(moduleId).then(() => {
+                            // Delete tous les users, exams et courses attachés °E°
+                            console.log('Module deleted');
+                            window.location.replace("./dashboard.html");
+                        }).catch((error) => {
+                            console.error('Error deleting Module:', error);
+                        });
+                    });
 
                     document.querySelector(".header-exam").innerHTML += `<div class="add-button" id="add-exam" onclick="window.addExam.showModal()"><i
                     class="fa fa-plus py-2 mr-3"></i></div>`

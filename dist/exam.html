@@ -15,9 +15,11 @@
 
     <div class="nav">
         <div class="nav-extend">
-            <img class="logo" src="../assets/img/logo.png" alt="logo">
+            <a style="display:flex" href="dashboard.html">
+                <img class="logo" src="../assets/img/logo.png" alt="logo">
+            </a>
             <a class="item-nav" href="dashboard.html">Dashboard</a>
-            <div class="image-profile">
+            <div class="image-profile toggle-all">
                 <div class="image-profile dropdown-toggle">
                     <i class="fa fa-user-circle-o" style="font-size:36px"></i>
                 </div>
@@ -58,7 +60,7 @@
         <div class="table-wrapper" style="display: none;">
             <table class="fl-table">
                 <thead>
-                    <tr>
+                    <tr id="tr-users">
                         <th>Full Name</th>
                         <th>Grades</th>
                         <th>Roles</th>
@@ -78,22 +80,29 @@
 
     <dialog id="editExam">
         <form class="edit-exam" style="text-align: center;">
-            <h3 style="margin-bottom: 2%;">Edit this Exam</h3>
-            <br>
+            <h3 style="margin-bottom: 2%;">Edit the Exam</h3>
             <label for="date">Date</label>
             <input type="date" name="date" required>
-            <br>
             <label for="name">Name</label>
             <input type="text" name="name">
-            <br>
             <label for="description">Description</label>
-            <input type="text" name="description">
-            <br>
-            <button style="margin-top: 2%; padding:2%; cursor: pointer;">Edit this Exam</button>
+            <textarea type="text" name="description" placeholder="Add a more detailed description..."
+                required></textarea>
+            <button style="margin-top: 2%; padding:2%; cursor: pointer;">Update</button>
         </form>
-        <button id="delete-exam">Delete this Exam</button>
         <button onclick="window.editExam.close();" aria-label="close" class="x">❌</button>
     </dialog>
+
+    <dialog id="editGrade">
+        <form class="edit-grade" style="text-align: center;">
+            <h3 style="margin-bottom: 2%;">Edit this Grade</h3>
+            <label for="grade">Grade</label>
+            <input type="number" step="any" name="grade">
+            <button style="margin-top: 2%; padding:2%; cursor: pointer;">Update</button>
+        </form>
+        <button onclick="window.editGrade.close();" aria-label="close" class="x">❌</button>
+    </dialog>
+
 
     <script src="bundles/exam.bundle.js"></script>
 

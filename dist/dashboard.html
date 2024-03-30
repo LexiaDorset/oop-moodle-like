@@ -15,7 +15,9 @@
 
     <div class="nav">
         <div class="nav-extend">
-            <img class="logo" src="../assets/img/logo.png" alt="logo">
+            <a style="display:flex" href="#">
+                <img class="logo" src="../assets/img/logo.png" alt="logo">
+            </a>
             <a class="item-nav" href="#">Dashboard</a>
             <div class="image-profile toggle-all">
                 <div class="image-profile dropdown-toggle">
@@ -39,7 +41,7 @@
     <div class="modules-ui" style="display: none;">
         <div class="module-capsule">
             <div class="modules-header header-object">
-                <h1>Courses Overview</h1>
+                <h1 class="table-header">Courses Overview</h1>
 
             </div>
             <div class="container-cards" id="list-module">
@@ -52,8 +54,14 @@
     <div class="ext-courses all-object" style="display: none;">
         <div class="container-courses container-objects">
             <div class="all-courses all-objects">
-                <div class="header-courses header-exam header-object">
+                <div class="header-courses header-exam header-object header-padding">
                     <h2>Next Courses</h2>
+                    <select id="courses-days" name="days">
+                        <option value="7" selected>7 Days</option>
+                        <option value="14">14 Days</option>
+                        <option value="30">30 Days</option>
+                        <option value="All">All</option>
+                    </select>
                 </div>
                 <div id="list-courses" class="list-courses list-objects">
 
@@ -61,10 +69,10 @@
             </div>
         </div>
 
-        <div class="container-exams container-objects" style="display: none;">
+        <div class="container-exams container-objects final-part" style="display: none;">
 
             <div class="all-exams all-objects">
-                <div class="header-courses header-exam header-object">
+                <div class="header-courses header-exam header-object header-padding">
                     <h2>Next Exams</h2>
                     <!-- Button added with js -->
                 </div>
@@ -76,7 +84,7 @@
     </div>
 
 
-    <div class="table-container" style="display: none;">
+    <div class="table-container final-part" style="display: none;">
         <div class="table-header-all header-object">
             <h1 class="table-header">Users</h1>
             <div class="addUserButton add-button" id="add-user" onclick="window.addUser.showModal()"><i
@@ -103,42 +111,36 @@
 
 
     <dialog id="addModule">
-        <form class="add-module" style="text-align: center;">
+        <form class="add-module">
             <h3 style="margin-bottom: 2%;">Create a new module</h3>
-            <label for="name">Title:</label>
+            <label for="name">Title</label>
             <input type="text" name="name" required>
-            <br>
-            <label for="description">Description:</label>
-            <input type="text" name="description" required>
-            <br>
-            <label for="faculty_id">Faculty:</label>
+            <label for="description">Description</label>
+            <textarea type="text" name="description" placeholder="Add a more detailed description..."
+                required></textarea>
+            <label for="faculty_id">Faculty</label>
             <select name="faculty_id" id="selectFaculty" required>
             </select>
-            <br>
-            <button style="margin-top: 2%; padding:2%; cursor: pointer;">Add a new module</button>
+            <button>Create</button>
         </form>
         <button onclick="window.addModule.close();" aria-label="close" class="x">❌</button>
     </dialog>
 
     <dialog id="addUser">
-        <form class="add-user" style="text-align: center;">
+        <form class="add-user">
             <h3 style="margin-bottom: 2%;">Register a new user</h3>
-            <label for="name">Full Name:</label>
+            <label for="name">Full name</label>
             <input type="text" name="name" required>
-            <br>
-            <label for="email">Email:</label>
+            <label for="email">Email</label>
             <input type="text" name="email" required>
-            <br>
-            <label for="password">Password:</label>
+            <label for="password">Password</label>
             <input type="password" name="password" required>
-            <br>
-            <label for="role">Role:</label>
+            <label for="role">Role</label>
             <select name="role" required>
                 <option value="student" name="student" selected>Student</option>
                 <option value="faculty" name="faculty">Faculty</option>
             </select>
-            <br>
-            <button style="margin-top: 2%; padding:2%; cursor: pointer;">Add a new user</button>
+            <button>Register</button>
         </form>
         <button onclick="window.addUser.close();" aria-label="close" class="x">❌</button>
     </dialog>

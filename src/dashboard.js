@@ -67,7 +67,6 @@ formCreateModule.addEventListener('submit', (e) => {
         .catch((error) => {
             console.error('Error adding module:', error);
         });
-    console.log("test");
     formCreateModule.reset();
     window.addModule.close();
 });
@@ -79,9 +78,9 @@ formCreateModule.addEventListener('submit', (e) => {
 // *-------------------------------------------------------------------------------* //
 
 function addUserToList() {
-    console.log(global.userRef)
     onSnapshot(global.userRef, (querySnapshot) => {
         querySnapshot.forEach((docu) => {
+            if (document.getElementById(docu.id + "user")) return;
             const ddata = docu.data();
             let roleUser = global.getUserRole(ddata);
             if (roleUser == global.roleAdmin) return;
@@ -97,6 +96,7 @@ function addUserToList() {
             a.href = "./profile.html?id=" + docu.id;
             td.append(a);
             tr.append(td, td2);
+            tr.id = docu.id + "user";
             listTeachers.appendChild(tr);
             console.log("User added");
         });
@@ -171,16 +171,18 @@ formAddUser.addEventListener('submit', (e) => {
         .catch((error) => {
             console.error('Error adding user:', error);
         });
-    console.log("test");
     formAddUser.reset();
+    window.addUser.close();
 })
 
-
+let selectCoursesDays = document.getElementById('courses-days');
 // *-------------------------------------------------------------------------------* //
 // *-------------------------- Add Next Courses ----------------------------* //
 // *-------------------------------------------------------------------------------* //
 
 function addCourses() {
+    let days = selectCoursesDays.options[selectCoursesDays.selectedIndex].value;
+    console.log("Days: ", days);
     const userModuleQuery = query(global.usermoduleRef, where(global.usermoduleUserId, "==", userId));
     onSnapshot(userModuleQuery, (querySnapshot) => {
         querySnapshot.forEach((docu2) => {
@@ -204,6 +206,9 @@ function addCourses() {
                         let h4_2 = document.createElement('h4');
                         let h3 = document.createElement('h3');
                         let date = global.getCourseStartDate(ddata).toDate()
+                        if (global.datesDiff(date, new Date()) > days) {
+                            return;
+                        };
                         let date2 = global.getCourseEndDate(ddata).toDate()
                         // Usage
                         if (global.isSameDay(date2, date)) {
@@ -279,7 +284,11 @@ function addExams(moduleId) {
             });
             a.innerHTML = `<i class="icon fa fa-graduation-cap fa-fw"></i>` + " " + global.getExamName(ddata);
             a.href = "exam.html?id=" + docu.id + "&type=exam";
-            h4_2.innerHTML = `<i class="icon fa fa-align-left fa-fw "></i>` + " " + global.getExamDescription(ddata);
+            let description = global.getExamDescription(ddata);
+            if (description.length > 100) {
+                description = description.substring(0, 100) + "...";
+            }
+            h4_2.innerHTML = `<i class="icon fa fa-align-left fa-fw "></i>` + " " + description;
             card.append(a, h4_1, h4_2);
             card.id = docu.id + "exam";
             listExams.appendChild(card);
@@ -313,7 +322,7 @@ let userId = "null";
 // *----------------------- AUTHENTIFICATIONS -------------------------------* //
 // *-------------------------------------------------------------------------------* //
 // *-------------------------------------------------------------------------------* //
-
+let role = "null";
 
 
 onAuthStateChanged(auth, (user) => {
@@ -328,15 +337,14 @@ onAuthStateChanged(auth, (user) => {
         onSnapshot(userQuery, (querySnapshot) => {
             querySnapshot.forEach((docu) => {
                 userId = docu.id;
-                global.navButton(profile, userId, document.querySelector('.dropdown-toggle'), document.querySelector('.dropdown'), document.querySelector(".logout"), auth);
-                if (docu.data().role == global.roleFaculty) {
-                }
-                else if (docu.data().role == global.roleStudent) {
+                role = global.getUserRole(docu.data());
+                global.navButton(profile, userId, document.querySelector('.dropdown-toggle'), document.querySelector('.dropdown'), document.querySelector(".logout"), auth, role == global.roleAdmin);
+                if (role == global.roleStudent || role == global.roleFaculty) {
                     document.querySelector(".ext-courses").style.display = "block";
                     document.querySelector(".container-exams").style.display = "block";
                     global.showCourses(document.querySelector(".nav-extend"), document.querySelector(".toggle-all"), "./courses.html", "Courses");
                     addCourses();
-                    console.log("student");
+                    console.log("student or faculty");
                 }
                 else {
                     console.log("admin");

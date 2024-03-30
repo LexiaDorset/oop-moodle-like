@@ -220,10 +220,15 @@ export function showCourses(doc1, doc2, link, name) {
     doc1.insertBefore(a, doc2);
 }
 
-export function navButton(profile, userId, dropdownToggle, dropdown, buttonLogout, auth) {
-    profile.addEventListener('click', () => {
-        window.location.replace("./profile.html?id=" + userId);
-    });
+export function navButton(profile, userId, dropdownToggle, dropdown, buttonLogout, auth, role) {
+    if (role) {
+        profile.remove()
+    }
+    else {
+        profile.addEventListener('click', () => {
+            window.location.replace("./profile.html?id=" + userId);
+        });
+    }
     dropdownToggle.addEventListener('click', () => {
         dropdown.classList.toggle('hidden');
     });
@@ -435,4 +440,72 @@ export function deleteGradeWithExamId(examId) {
             });
         });
     })
+}
+
+export function deleteUser(userId) {
+    return new Promise((resolve, reject) => {
+        deleteDoc(doc(userRef, userId))
+            .then(() => {
+                deleteModuleUserWithUserId(userId).then(() => {
+                    console.log('User deleted');
+                    resolve();
+                });
+            })
+            .catch((error) => {
+                console.error('Error deleting User:', error);
+            });
+    })
+}
+
+export function deleteModuleUserWithUserId(userId) {
+    return new Promise((resolve, reject) => {
+        const q = query(usermoduleRef, where(usermoduleUserId, "==", userId));
+        getDocs(q).then((querySnapshot) => {
+            if (querySnapshot.empty) {
+                resolve();
+            }
+            querySnapshot.forEach((doc) => {
+                deleteDoc(doc.ref)
+                    .then(() => {
+                        deleteGradeWithUserId(userId).then(() => {
+                            console.log('UserModule deleted');
+                            resolve();
+                        });
+                    })
+                    .catch((error) => {
+                        console.error('Error deleting UserModule:', error);
+                    });
+            });
+        });
+    })
+}
+
+export function deleteGradeWithUserId(userId) {
+    return new Promise((resolve, reject) => {
+        const q = query(gradesRef, where(gradesUserId, "==", userId));
+        getDocs(q).then((querySnapshot) => {
+            if (querySnapshot.empty) {
+                resolve();
+            }
+            querySnapshot.forEach((doc) => {
+                deleteDoc(doc.ref)
+                    .then(() => {
+                        console.log('Grade deleted');
+                        resolve();
+                    })
+                    .catch((error) => {
+                        console.error('Error deleting Grade:', error);
+                    });
+            });
+        });
+    })
+}
+
+
+export function datesDiff(a, b) {
+    a = a.getTime();
+    b = (b || new Date()).getTime();
+    var c = a > b ? a : b,
+        d = a > b ? b : a;
+    return Math.abs(Math.ceil((c - d) / 86400000));
 }

@@ -55,10 +55,22 @@ loginForm.addEventListener('submit', (e) => {
     const password = loginForm.password.value
     signInWithEmailAndPassword(auth, email, password)
         .then((cred) => {
-            console.log('user logged in: ', cred.user)
-            loginForm.reset()
-            window.location.replace("dashboard.html");
-            console.log('user logged in: ', cred.user.email)
+            const userQuery = query(global.userRef, where(global.userId, "==", cred.user.uid));
+            onSnapshot(userQuery, (querySnapshot) => {
+                if (querySnapshot.size === 0) {
+                    auth.currentUser.delete().then(() => {
+                        console.log('User deleted successfully');
+                    });
+                    loginForm.reset()
+                }
+                else {
+                    console.log('user logged in User: ', cred.user)
+                    console.log('user logged in Email: ', cred.user.email)
+                    loginForm.reset()
+                    window.location.replace("dashboard.html");
+                }
+            });
+
         })
         .catch((err) => {
             console.log("This user doesn't exists", err.message)
