@@ -62,6 +62,10 @@
                         <option value="30">30 Days</option>
                         <option value="All">All</option>
                     </select>
+                    <select id="courses-orderby" name="days">Order by
+                        <option value="Date" selected>Dates</option>
+                        <option value="Module">Modules</option>
+                    </select>
                 </div>
                 <div id="list-courses" class="list-courses list-objects">
 
@@ -74,6 +78,16 @@
             <div class="all-exams all-objects">
                 <div class="header-courses header-exam header-object header-padding">
                     <h2>Next Exams</h2>
+                    <select id="exams-days" name="days">
+                        <option value="7" selected>7 Days</option>
+                        <option value="14">14 Days</option>
+                        <option value="30">30 Days</option>
+                        <option value="All">All</option>
+                    </select>
+                    <select id="exams-orderby" name="days">Order by
+                        <option value="Date" selected>Dates</option>
+                        <option value="Module">Modules</option>
+                    </select>
                     <!-- Button added with js -->
                 </div>
                 <div id="list-exams" class="list-exams list-objects">
@@ -112,7 +126,7 @@
 
     <dialog id="addModule">
         <form class="add-module">
-            <h3 style="margin-bottom: 2%;">Create a new module</h3>
+            <h3>Create a new module</h3>
             <label for="name">Title</label>
             <input type="text" name="name" required>
             <label for="description">Description</label>
@@ -128,7 +142,7 @@
 
     <dialog id="addUser">
         <form class="add-user">
-            <h3 style="margin-bottom: 2%;">Register a new user</h3>
+            <h3>Register a new user</h3>
             <label for="name">Full name</label>
             <input type="text" name="name" required>
             <label for="email">Email</label>

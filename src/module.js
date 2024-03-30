@@ -537,10 +537,16 @@ onAuthStateChanged(auth, (user) => {
                     });
                 }
                 else {
+                    let button = document.createElement('button');
+                    button.classList.add("buttonAdd");
+                    button.onclick = function () {
+                        window.addParticipant.showModal();
+                    };
+                    button.innerText = "Add a user";
+                    document.querySelector(".participants-page").append(button);
                     let th = document.createElement('th');
                     th.innerText = "Delete";
                     document.getElementById("tr-users").append(th);
-
 
                     document.getElementById("h2-general").innerHTML = `General<i class="fas fa-edit edit-object" id="editButtonModule"
                     onclick="window.editModule.showModal()"></i><i class="fas fa-trash-alt delete-object" id="delete-module"></i>`;

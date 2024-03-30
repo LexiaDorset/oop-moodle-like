@@ -80,7 +80,7 @@
 
     <dialog id="editExam">
         <form class="edit-exam" style="text-align: center;">
-            <h3 style="margin-bottom: 2%;">Edit the Exam</h3>
+            <h3>Edit the Exam</h3>
             <label for="date">Date</label>
             <input type="date" name="date" required>
             <label for="name">Name</label>
@@ -88,17 +88,17 @@
             <label for="description">Description</label>
             <textarea type="text" name="description" placeholder="Add a more detailed description..."
                 required></textarea>
-            <button style="margin-top: 2%; padding:2%; cursor: pointer;">Update</button>
+            <button>Update</button>
         </form>
         <button onclick="window.editExam.close();" aria-label="close" class="x">❌</button>
     </dialog>
 
     <dialog id="editGrade">
         <form class="edit-grade" style="text-align: center;">
-            <h3 style="margin-bottom: 2%;">Edit this Grade</h3>
+            <h3>Edit this Grade</h3>
             <label for="grade">Grade</label>
             <input type="number" step="any" name="grade">
-            <button style="margin-top: 2%; padding:2%; cursor: pointer;">Update</button>
+            <button>Update</button>
         </form>
         <button onclick="window.editGrade.close();" aria-label="close" class="x">❌</button>
     </dialog>

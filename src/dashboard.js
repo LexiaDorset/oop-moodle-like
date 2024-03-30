@@ -176,13 +176,40 @@ formAddUser.addEventListener('submit', (e) => {
 })
 
 let selectCoursesDays = document.getElementById('courses-days');
+
+selectCoursesDays.addEventListener('change', (e) => {
+    listCourses.innerHTML = "";
+    addCourses();
+});
+
+let selectExamsDays = document.getElementById('exams-days');
+selectExamsDays.addEventListener('change', (e) => {
+    listExams.innerHTML = "";
+    addCourses();
+});
+
+let selectCoursesOrder = document.getElementById('courses-orderby');
+selectCoursesOrder.addEventListener('change', (e) => {
+    listCourses.innerHTML = "";
+    addCourses();
+});
+
+let selectExamsOrder = document.getElementById('exams-orderby');
+selectExamsOrder.addEventListener('change', (e) => {
+    listExams.innerHTML = "";
+    addCourses();
+});
 // *-------------------------------------------------------------------------------* //
 // *-------------------------- Add Next Courses ----------------------------* //
 // *-------------------------------------------------------------------------------* //
 
 function addCourses() {
     let days = selectCoursesDays.options[selectCoursesDays.selectedIndex].value;
+    let order = selectCoursesOrder.options[selectCoursesOrder.selectedIndex].value;
+    console.log("Order: ", order);
     console.log("Days: ", days);
+    let listDates = [];
+    let listExamsDates = [];
     const userModuleQuery = query(global.usermoduleRef, where(global.usermoduleUserId, "==", userId));
     onSnapshot(userModuleQuery, (querySnapshot) => {
         querySnapshot.forEach((docu2) => {
@@ -190,67 +217,84 @@ function addCourses() {
             const courseQuery = query(global.courseRef, where(global.courseModule, '==', moduleId));
             onSnapshot(courseQuery, (querySnapshot) => {
                 querySnapshot.forEach((docu) => {
-                    if (document.getElementById(docu.id + "course")) {
-                        console.log("Course already exists");
-                        return;
-                    }
                     const ddata = docu.data();
                     let card = document.createElement('div');
                     card.classList.add("card-object");
                     let h6 = document.createElement('h6');
                     let name = "";
                     getDoc(doc(global.moduleRef, moduleId)).then((docu3) => {
-                        addExams(moduleId);
+                        addExams(moduleId, listExamsDates);
+                        if (document.getElementById(docu.id + "course")) {
+                            console.log("Course already exists");
+                            return;
+                        }
                         name = global.getModuleName(docu3.data());
                         let h4_1 = document.createElement('h4');
                         let h4_2 = document.createElement('h4');
                         let h3 = document.createElement('h3');
                         let date = global.getCourseStartDate(ddata).toDate()
-                        if (global.datesDiff(date, new Date()) > days) {
+                        if (date < new Date()) {
                             return;
+                        }
+                        if (days == "All" || global.datesDiff(date, new Date()) <= days) {
+                            let date2 = global.getCourseEndDate(ddata).toDate()
+                            // Usage
+                            if (global.isSameDay(date2, date)) {
+                                h3.innerText = name + " - " + date.toLocaleDateString('en-GB', {
+                                    weekday: 'long',
+                                    year: 'numeric',
+                                    month: 'long',
+                                    day: 'numeric'
+                                }) + ', ' + date.toLocaleTimeString('en-GB', {
+                                    hour: '2-digit',
+                                    minute: '2-digit'
+                                }) + " ► " + date2.toLocaleTimeString('en-GB', {
+                                    hour: '2-digit',
+                                    minute: '2-digit'
+                                });
+                            }
+                            else {
+                                h3.innerText = name + " - " + date.toLocaleDateString('en-GB', {
+                                    weekday: 'long',
+                                    year: 'numeric',
+                                    month: 'long',
+                                    day: 'numeric'
+                                }) + ', ' + date.toLocaleTimeString('en-GB', {
+                                    hour: '2-digit',
+                                    minute: '2-digit'
+                                }) + " ► " + date2.toLocaleDateString('en-GB', {
+                                    weekday: 'long',
+                                    year: 'numeric',
+                                    month: 'long',
+                                    day: 'numeric'
+                                }) + ', ' + date2.toLocaleTimeString('en-GB', {
+                                    hour: '2-digit',
+                                    minute: '2-digit'
+                                });
+                            }
+                            h4_2.innerText = "Description: " + global.getCourseDescription(ddata);
+                            card.append(h6, h3, h4_1, h4_2);
+                            card.id = docu.id + "course";
+
+                            if (order == "Date") {
+                                listDates.push({ date: date, element: card });
+                                listDates.sort((a, b) => a.date - b.date);
+                                let index = listDates.findIndex(item => item.element === card && item.date === date);
+                                if (index + 1 == listDates.length) {
+                                    listCourses.appendChild(card);
+                                }
+                                else {
+                                    listCourses.insertBefore(card, listDates[index + 1].element);
+                                }
+                            }
+                            else {
+                                listCourses.appendChild(card);
+                            }
                         };
-                        let date2 = global.getCourseEndDate(ddata).toDate()
-                        // Usage
-                        if (global.isSameDay(date2, date)) {
-                            h3.innerText = name + " - " + date.toLocaleDateString('en-GB', {
-                                weekday: 'long',
-                                year: 'numeric',
-                                month: 'long',
-                                day: 'numeric'
-                            }) + ', ' + date.toLocaleTimeString('en-GB', {
-                                hour: '2-digit',
-                                minute: '2-digit'
-                            }) + " ► " + date.toLocaleTimeString('en-GB', {
-                                hour: '2-digit',
-                                minute: '2-digit'
-                            });
-                        }
-                        else {
-                            h3.innerText = name + " - " + date.toLocaleDateString('en-GB', {
-                                weekday: 'long',
-                                year: 'numeric',
-                                month: 'long',
-                                day: 'numeric'
-                            }) + ', ' + date.toLocaleTimeString('en-GB', {
-                                hour: '2-digit',
-                                minute: '2-digit'
-                            }) + " ► " + date2.toLocaleDateString('en-GB', {
-                                weekday: 'long',
-                                year: 'numeric',
-                                month: 'long',
-                                day: 'numeric'
-                            }) + ', ' + date2.toLocaleTimeString('en-GB', {
-                                hour: '2-digit',
-                                minute: '2-digit'
-                            });
-                        }
-                        h4_2.innerText = "Description: " + global.getCourseDescription(ddata);
-                        card.append(h6, h3, h4_1, h4_2);
-                        card.id = docu.id + "course";
-                        listCourses.appendChild(card);
                     });
                 });
             });
+
         });
     });
 }
@@ -260,7 +304,9 @@ function addCourses() {
 // *-------------------------------------------------------------------------------* //
 
 
-function addExams(moduleId) {
+function addExams(moduleId, listExamsDates) {
+    let days = selectExamsDays.options[selectExamsDays.selectedIndex].value;
+    let orderby = selectExamsOrder.options[selectExamsOrder.selectedIndex].value;
     const examQuery = query(global.examRef, where(global.courseModule, '==', moduleId));
     onSnapshot(examQuery, (querySnapshot) => {
         querySnapshot.forEach((docu) => {
@@ -276,22 +322,39 @@ function addExams(moduleId) {
             let a = document.createElement('a');
 
             let date = global.getExamDate(ddata).toDate()
-            h4_1.innerHTML = `<i class="icon fa fa-clock-o fa-fw "></i>` + date.toLocaleDateString('en-GB', {
-                weekday: 'long',
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric'
-            });
-            a.innerHTML = `<i class="icon fa fa-graduation-cap fa-fw"></i>` + " " + global.getExamName(ddata);
-            a.href = "exam.html?id=" + docu.id + "&type=exam";
-            let description = global.getExamDescription(ddata);
-            if (description.length > 100) {
-                description = description.substring(0, 100) + "...";
-            }
-            h4_2.innerHTML = `<i class="icon fa fa-align-left fa-fw "></i>` + " " + description;
-            card.append(a, h4_1, h4_2);
-            card.id = docu.id + "exam";
-            listExams.appendChild(card);
+            if (days == "All" || global.datesDiff(date, new Date()) <= days) {
+                h4_1.innerHTML = `<i class="icon fa fa-clock-o fa-fw "></i>` + date.toLocaleDateString('en-GB', {
+                    weekday: 'long',
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                });
+                a.innerHTML = `<i class="icon fa fa-graduation-cap fa-fw"></i>` + " " + global.getExamName(ddata);
+                a.href = "exam.html?id=" + docu.id + "&type=exam";
+                let description = global.getExamDescription(ddata);
+                if (description.length > 100) {
+                    description = description.substring(0, 100) + "...";
+                }
+                h4_2.innerHTML = `<i class="icon fa fa-align-left fa-fw "></i>` + " " + description;
+                card.append(a, h4_1, h4_2);
+                card.id = docu.id + "exam";
+                listExams.appendChild(card);
+
+                if (orderby == "Date") {
+                    listExamsDates.push({ date: date, element: card });
+                    listExamsDates.sort((a, b) => a.date - b.date);
+                    let index = listExamsDates.findIndex(item => item.element === card && item.date === date);
+                    if (index + 1 == listExamsDates.length) {
+                        listExams.appendChild(card);
+                    }
+                    else {
+                        listExams.insertBefore(card, listExamsDates[index + 1].element);
+                    }
+                }
+                else {
+                    listExams.appendChild(card);
+                }
+            };
         });
     });
 }
