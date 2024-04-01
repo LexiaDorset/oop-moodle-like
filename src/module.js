@@ -550,38 +550,44 @@ onAuthStateChanged(auth, (user) => {
                     th.innerText = "Delete";
                     document.getElementById("tr-users").append(th);
 
-                    document.getElementById("h2-general").innerHTML = `General<i class="fas fa-edit edit-object" id="editButtonModule"
+                    if (role == global.roleAdmin) {
+                        document.getElementById("h2-general").innerHTML = `General<i class="fas fa-edit edit-object" id="editButtonModule"
                     onclick="window.editModule.showModal()"></i><i class="fas fa-trash-alt delete-object" id="delete-module"></i>`;
-                    let editModuleButton = document.getElementById('editButtonModule');
-                    const buttonDeleteModule = document.getElementById('delete-module')
-                    buttonDeleteModule.addEventListener('click', (e) => {
-                        e.preventDefault();
+                        const buttonDeleteModule = document.getElementById('delete-module')
+                        buttonDeleteModule.addEventListener('click', (e) => {
+                            e.preventDefault();
 
-                        if (window.confirm("Are you sure you want to delete this module?") == false) return;
-                        global.deleteModule(moduleId).then(() => {
-                            // Delete tous les users, exams et courses attachés °E°
-                            console.log('Module deleted');
-                            window.location.replace("./dashboard.html");
-                        }).catch((error) => {
-                            console.error('Error deleting Module:', error);
+                            if (window.confirm("Are you sure you want to delete this module?") == false) return;
+                            global.deleteModule(moduleId).then(() => {
+                                // Delete tous les users, exams et courses attachés °E°
+                                console.log('Module deleted');
+                                window.location.replace("./dashboard.html");
+                            }).catch((error) => {
+                                console.error('Error deleting Module:', error);
+                            });
                         });
-                    });
+                    }
+
+
 
                     document.querySelector(".header-exam").innerHTML += `<div class="add-button" id="add-exam" onclick="window.addExam.showModal()"><i
                     class="fa fa-plus py-2 mr-3"></i></div>`
                     document.querySelector(".h-c").innerHTML += `<div class="add-button" id="add-course" onclick="window.addCourse.showModal()"> <i
                     class="fa fa-plus py-2 mr-3"></i></div>`
                     addDetailsModule().then(() => {
-                        editModuleButton.addEventListener('click', () => {
-                            onSnapshot(module, (docu2) => {
-                                if (docu2.exists()) {
-                                    let docuData = docu2.data();
-                                    editModuleForm.name.value = global.getModuleName(docuData);
-                                    editModuleForm.description.value = global.getModuleDescription(docuData);
-                                    document.getElementById(global.getModuleFacultyId(docuData) + "addF").selected = true;
-                                }
+                        if (role == global.roleAdmin) {
+                            let editModuleButton = document.getElementById('editButtonModule');
+                            editModuleButton.addEventListener('click', () => {
+                                onSnapshot(module, (docu2) => {
+                                    if (docu2.exists()) {
+                                        let docuData = docu2.data();
+                                        editModuleForm.name.value = global.getModuleName(docuData);
+                                        editModuleForm.description.value = global.getModuleDescription(docuData);
+                                        document.getElementById(global.getModuleFacultyId(docuData) + "addF").selected = true;
+                                    }
+                                });
                             });
-                        });
+                        }
 
                         console.log("admin");
                         document.body.style.display = "block";

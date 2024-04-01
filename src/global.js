@@ -85,9 +85,7 @@ export const moduleCollection = "module";
 export const userCollection = "user";
 export const usermoduleCollection = "usermodule";
 export const courseCollection = "course";
-export const teachermoduleCollection = "teachermodule";
 export const gradesCollection = "grade";
-
 
 // Collections references
 export const examRef = collection(db, examCollection)
@@ -96,7 +94,6 @@ export const userRef = collection(db, userCollection)
 export const usermoduleRef = collection(db, usermoduleCollection)
 export const courseRef = collection(db, courseCollection)
 export const gradesRef = collection(db, gradesCollection)
-
 
 // Modules
 export const moduleNameString = "name";
