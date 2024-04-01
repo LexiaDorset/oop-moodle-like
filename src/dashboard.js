@@ -117,7 +117,7 @@ function addModulesToListd(ddata, docu) {
     a1.href = "module.html?id=" + docu.id + "&type=course";
     let img = document.createElement('img');
     img.classList.add("card-img-top");
-    img.src = "../../assets/img/logo.png";
+    img.src = "../../assets/img/module_card.png";
     a1.appendChild(img);
 
 
@@ -405,7 +405,7 @@ onAuthStateChanged(auth, (user) => {
                 if (role == global.roleStudent || role == global.roleFaculty) {
                     document.querySelector(".ext-courses").style.display = "block";
                     document.querySelector(".container-exams").style.display = "block";
-                    global.showCourses(document.querySelector(".nav-extend"), document.querySelector(".toggle-all"), "./courses.html", "Courses");
+                    global.showCourses(document.querySelector(".nav-extend"), document.querySelector(".toggle-all"), "./courses.html", "My Courses", false);
                     addCourses();
                     console.log("student or faculty");
                 }

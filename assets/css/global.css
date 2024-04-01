@@ -10,18 +10,45 @@
 /* --------------------------------- */
 
 .nav {
-    background-color: #bababa;
-    padding: 1%
+    border-bottom: 2px solid #dedede;
+    padding: 0% 1% 0% 1%
 }
 
 .nav-extend {
-    align-items: center ! important;
     display: flex;
-    gap: 2%;
+}
+
+.navmain-object {
+    align-items: center;
+    display: flex;
+    gap: 10px;
+    padding: 1%;
+    text-decoration: none;
+    color: black;
+    cursor: pointer;
+}
+
+.navmain-object:hover {
+    background-color: #f8f8f8;
+}
+
+.nav-extend .active {
+    border-bottom: 2px solid black;
+}
+
+.toggle-all {
+    margin-top: 0.5%;
 }
 
 .logo {
     width: 100px;
+    height: fit-content;
+}
+
+.nav-extend a {
+    margin-right: 1%;
+    display: flex;
+    align-items: center;
 }
 
 .item-nav {
@@ -34,6 +61,7 @@
     margin-left: auto;
     align-items: center;
     display: relative;
+
 }
 
 .dropdown-toggle::after {

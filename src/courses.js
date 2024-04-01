@@ -103,7 +103,7 @@ onAuthStateChanged(auth, (user) => {
             querySnapshot.forEach((docu) => {
                 userId = docu.id;
                 global.navButton(profile, userId, document.querySelector('.dropdown-toggle'), document.querySelector('.dropdown'), document.querySelector(".logout"), auth, false);
-                global.showCourses(document.querySelector(".nav-extend"), document.querySelector(".toggle-all"), "./courses.html", "Courses");
+                global.showCourses(document.querySelector(".nav-extend"), document.querySelector(".toggle-all"), "./courses.html", "My Courses", true);
                 addModulesToListStudent();
                 document.body.style.display = "block";
             });

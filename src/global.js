@@ -212,9 +212,13 @@ export function getGradesExamId(data) {
 }
 
 
-export function showCourses(doc1, doc2, link, name) {
+export function showCourses(doc1, doc2, link, name, act) {
     let a = document.createElement("a");
     a.classList.add("item-nav");
+    a.classList.add("navmain-object");
+    if (act) {
+        a.classList.add("active");
+    }
     a.href = link;
     a.innerText = name;
     doc1.insertBefore(a, doc2);

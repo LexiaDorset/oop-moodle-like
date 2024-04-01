@@ -286,6 +286,7 @@ function addCourses() {
                     deleteDoc(doc(global.courseRef, docu.id))
                         .then(() => {
                             console.log('Course deleted');
+                            document.getElementById(docu.id + "course").remove();
                         })
                         .catch((error) => {
                             console.error('Error deleting Course:', error);
@@ -507,7 +508,7 @@ onAuthStateChanged(auth, (user) => {
                 role = docu.data().role;
                 global.navButton(profile, userId, document.querySelector('.dropdown-toggle'), document.querySelector('.dropdown'), document.querySelector(".logout"), auth, role == global.roleAdmin);
                 if (role == global.roleFaculty) {
-                    global.showCourses(document.querySelector(".nav-extend"), document.querySelector(".toggle-all"), "./courses.html", "Courses");
+                    global.showCourses(document.querySelector(".nav-extend"), document.querySelector(".toggle-all"), "./courses.html", "My Courses", false);
                     //Check if the faculty id of the module is the same as the faculty id of the user
                     getDoc(module).then((docu) => {
                         if (docu.exists()) {
@@ -520,6 +521,7 @@ onAuthStateChanged(auth, (user) => {
                     console.log("faculty");
                 }
                 if (role == global.roleStudent) {
+                    global.showCourses(document.querySelector(".nav-extend"), document.querySelector(".toggle-all"), "./courses.html", "My Courses", false);
                     addDetailsModule().then(() => {
                         console.log("student");
                         document.body.style.display = "block";

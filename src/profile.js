@@ -105,7 +105,7 @@ function addCourses() {
                     td1.append(a);
                     tr.append(td1, td);
                     tr.id = docu2.id + "toU";
-                    if (role == global.roleAdmin || role == global.roleFaculty) {
+                    if (role == global.roleAdmin) {
                         let td4 = document.createElement('td');
                         let i = document.createElement('i');
                         i.classList.add("fas", "fa-trash-alt");
@@ -254,11 +254,42 @@ onAuthStateChanged(auth, (_user) => {
                 role = global.getUserRole(docu.data());
                 global.navButton(profile, docu.id, document.querySelector('.dropdown-toggle'), document.querySelector('.dropdown'), document.querySelector(".logout"), auth, false);
                 if (role == global.roleFaculty) {
+                    global.showCourses(document.querySelector(".nav-extend"), document.querySelector(".toggle-all"), "./courses.html", "My Courses", false);
+                    if (docu.id == profileId) {
+                        editUserButton.onclick = () => {
+                            window.editUserU.showModal()
+                        };
+                        editUserButton.addEventListener('click', () => {
+                            getDoc(userProfile).then((docu2) => {
+                                console.log(docu2);
+                                let docuData = docu2.data();
+                                editUserFormU.name.value = global.getUserName(docuData);
+                                editUserFormU.email.value = global.getUserEmail(docuData);
+                            });
+                        });
+                    }
+                    else {
+                        document.querySelector(".admin-header-course").innerText = "Courses taken";
+                        editUserButton.remove();
+                    }
+                    addUserDetails();
+                    addCourses();
+                    document.body.style.display = "block";
+                    console.log("faculty");
                 }
                 else if (role == global.roleStudent) {
+                    global.showCourses(document.querySelector(".nav-extend"), document.querySelector(".toggle-all"), "./courses.html", "My Courses", false);
                     if (docu.id != profileId) {
-                        window.location.replace("dashboard.html");
+                        getDoc(userProfile).then((docProfile) => {
+                            if (global.getUserRole(docProfile.data()) != global.roleFaculty) {
+                                window.location.replace("dashboard.html");
+                            }
+                            else {
+                                document.querySelector(".admin-header-course").innerText = "Courses taken";
+                            }
+                        });
                     }
+
                     editUserButton.onclick = () => {
                         window.editUserU.showModal()
                     };

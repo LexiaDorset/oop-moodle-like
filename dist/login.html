@@ -12,26 +12,27 @@
 <body>
     <div class="login-box">
         <div class="login-inside">
+            <img class="logo" src="../assets/img/logo.png">
             <h1 class="main-title">Login</h1>
             <form class="login">
                 <label for="email" class="login-label">Email</label>
                 <input type="text" name="email" required>
                 <label for="password" class="login-label">Password</label>
                 <input type="password" name="password" required>
-                <button>Login</button>
+                <button>Log In</button>
             </form>
-            <button onclick="window.loginAdmin.showModal()">Login Admin</button>
+            <button onclick="window.loginAdmin.showModal()">Log In Admin</button>
             <a onclick="window.resetPassword.showModal()" style="cursor: pointer;">Forgot your password?</a>
-            <a href="#">Terms of services and private policy</a>
+            <!--<a href="#">Terms of services and private policy</a>-->
         </div>
     </div>
 
     <dialog id="resetPassword">
         <form class="resetPassword" style="text-align: center;">
             <h3>Reset password</h3>
-            <label for="email">Email:</label>
+            <label for="email">Email</label>
             <input type="text" name="email" required>
-            <button style="margin-top: 2%; padding:2%; cursor: pointer; text-align: center;">Send an email</button>
+            <button>Send an email</button>
         </form>
         <button onclick="window.resetPassword.close();" aria-label="close" class="x">❌</button>
     </dialog>
@@ -40,9 +41,7 @@
         <form class="login-admin">
             <label for="password" class="login-label">Password</label>
             <input type="password" name="password" required class="login-input">
-            <div class="login-input-div">
-                <input type="submit" value="Log In Admin" class="login-button">
-            </div>
+            <button class="login-button">Log In Admin</button>
         </form>
         <button onclick="window.loginAdmin.close();" aria-label="close" class="x">❌</button>
     </dialog>

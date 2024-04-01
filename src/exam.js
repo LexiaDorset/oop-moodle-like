@@ -269,6 +269,7 @@ onAuthStateChanged(auth, (user) => {
                 role = global.getUserRole(docu.data());
                 global.navButton(profile, userId, document.querySelector('.dropdown-toggle'), document.querySelector('.dropdown'), document.querySelector(".logout"), auth, role == global.roleAdmin);
                 if (role == global.roleFaculty) {
+                    global.showCourses(document.querySelector(".nav-extend"), document.querySelector(".toggle-all"), "./courses.html", "My Courses", false);
                     // Check if the faculty id of the module is the same as the faculty id of the user
                     getDoc(exam).then((docu5) => {
                         if (docu5.exists()) {
@@ -284,6 +285,7 @@ onAuthStateChanged(auth, (user) => {
                     });
                 }
                 if (role == global.roleStudent) {
+                    global.showCourses(document.querySelector(".nav-extend"), document.querySelector(".toggle-all"), "./courses.html", "My Courses", false);
                     addDetailsToExam().then(() => {
                         addGrades();
                         console.log("student");
