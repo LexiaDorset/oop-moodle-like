@@ -123,6 +123,30 @@
         </div>
     </div>
 
+    <div class="table-container final-part" id="table-class" style="display: none;">
+        <div class="table-header-all header-object">
+            <h1 class="table-header">Class</h1>
+            <div class="add-button" id="add-class" onclick="window.addClass.showModal()"><i
+                    class="fa fa-plus py-2 mr-3"></i></div>
+        </div>
+        <div class="table-wrapper">
+            <table class="fl-table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                    </tr>
+                </thead>
+                <tbody id="list-class"> <!--Keep the id-->
+                    <!-- The elements are added dynamically, exemple of what it look like:
+                <tr>
+                   <td>TestNewCoucou</td>
+                </tr>
+                -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
 
     <dialog id="addModule">
         <form class="add-module">
@@ -157,6 +181,16 @@
             <button>Register</button>
         </form>
         <button onclick="window.addUser.close();" aria-label="close" class="x">❌</button>
+    </dialog>
+
+    <dialog id="addClass">
+        <form class="add-class">
+            <h3>Create a new class</h3>
+            <label for="name">Name</label>
+            <input type="text" name="name" required>
+            <button>Create</button>
+        </form>
+        <button onclick="window.addClass.close();" aria-label="close" class="x">❌</button>
     </dialog>
 
 

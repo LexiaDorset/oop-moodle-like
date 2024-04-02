@@ -23,9 +23,11 @@ const auth = getAuth();
 
 // Forms
 const formCreateModule = document.querySelector('.add-module');
+const formCreateClass = document.querySelector('.add-class');
 
 // Lists
 const listTeachers = document.getElementById('list-participants');
+const listClass = document.getElementById('list-class');
 const listModules = document.getElementById('list-module');
 
 
@@ -74,7 +76,7 @@ formCreateModule.addEventListener('submit', (e) => {
 
 
 // *-------------------------------------------------------------------------------* //
-// *-------------------------- List Teachers ----------------------------* //
+// *-------------------------- List Users ----------------------------* //
 // *-------------------------------------------------------------------------------* //
 
 function addUserToList() {
@@ -99,6 +101,29 @@ function addUserToList() {
             tr.id = docu.id + "user";
             listTeachers.appendChild(tr);
             console.log("User added");
+        });
+    });
+}
+
+// *-------------------------------------------------------------------------------* //
+// *-------------------------- List Class ----------------------------* //
+// *-------------------------------------------------------------------------------* //
+
+function addClassToList() {
+    onSnapshot(global.classRef, (querySnapshot) => {
+        querySnapshot.forEach((docu) => {
+            if (document.getElementById(docu.id + "class")) return;
+            const ddata = docu.data();
+            let tr = document.createElement('tr');
+            let a = document.createElement('a');
+            let td = document.createElement('td');
+            a.innerText = global.getClassName(ddata);
+            a.href = "./class.html?id=" + docu.id;
+            td.append(a);
+            tr.append(td);
+            tr.id = docu.id + "class";
+            listClass.appendChild(tr);
+            console.log("Class added");
         });
     });
 }
@@ -372,6 +397,24 @@ function addFacultyToSelect(name, key) {
     selectFaculty.appendChild(option);
 }
 
+// *-------------------------------------------------------------------------------* //
+// *-------------------------- Create Class ----------------------------* //
+// *-------------------------------------------------------------------------------* //
+
+formCreateClass.addEventListener('submit', (e) => {
+    e.preventDefault();
+    addDoc(global.classRef, {
+        name: formCreateClass.name.value,
+    })
+        .then(() => {
+            console.log('Class added');
+        })
+        .catch((error) => {
+            console.error('Error adding class:', error);
+        });
+    formCreateClass.reset();
+    window.addClass.close();
+});
 
 // *-------------------------------------------------------------------------------* //
 // *-------------------------- Profile Redirection ----------------------------* //
@@ -415,8 +458,10 @@ onAuthStateChanged(auth, (user) => {
                     document.querySelector(".modules-ui").style.display = "block";
                     document.querySelector(".modules-header").innerHTML += `<div class="addModuleButton add-button" id="add-module" onclick="window.addModule.showModal()"><i
                     class="fa fa-plus py-2 mr-3"></i></div>`
+                    document.getElementById("table-class").style.display = "block";
                     addUserToList();
                     addModulesToListAdmin();
+                    addClassToList();
                 }
                 document.body.style.display = "block";
             });

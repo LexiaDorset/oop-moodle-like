@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Class:</title>
+    <link rel="stylesheet" href="../assets/css/global.css">
+    <link rel="stylesheet" href="../assets/css/class.css">
+    <link rel="stylesheet" href="../assets/fonts/fontawesome-all.min.css">
+    <link rel="stylesheet" href="../assets/fonts/font-awesome.min.css">
+</head>
+
+<body style="display: none;">
+
+    <div class="nav">
+        <div class="nav-extend">
+            <a class="a-logo" href="dashboard.html">
+                <img class="logo" src="../assets/img/logo.png" alt="logo">
+            </a>
+            <a class="item-nav navmain-object" href="dashboard.html">Dashboard</a>
+            <div class="image-profile toggle-all">
+                <div class="image-profile dropdown-toggle">
+                    <i class="fa fa-user-circle-o" style="font-size:36px"></i>
+                </div>
+                <div class="dropdown hidden">
+                    <div class="inside-dropdown">
+                        <div id="profile" class="item-dropdown">
+                            <a class="profile">Profile</a>
+                        </div>
+                        <div class="item-dropdown logout">
+                            <a>Logout</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="all-profile all-object">
+
+
+        <div class="details-profile">
+            <div class="header-profile header-object">
+                <h2 id="h2-profile" style="display: flex;align-items: center">
+                </h2>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="all-module all-object">
+
+        <div class="participants-page">
+            <div class="table-wrapper">
+                <table class="fl-table">
+                    <thead>
+                        <tr id="tr-users">
+                            <th>Full Name</th>
+                            <th>Roles</th>
+                        </tr>
+                    </thead>
+                    <tbody class="participants" id="list-participants"> <!--Keep the id-->
+                        <!-- The elements are added dynamically, exemple of what it look like:
+                <tr>
+                   <td>TestNewCoucou</td>
+                </tr>
+                -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <dialog id="editClass">
+        <form class="edit-class">
+            <h3>Edit this class</h3>
+            <label for="name">Name</label>
+            <input type="text" name="name" required>
+            <button>Upgrade</button>
+        </form>
+        <button onclick="window.editClass.close();" aria-label="close" class="x">❌</button>
+    </dialog>
+
+    <dialog id="addParticipant">
+        <form class="add-participant">
+            <h3>Add Participant to the class</h3>
+            <label for="user">User</label>
+            <select name="user" id="selectUser" required>
+            </select>
+            <button>Add</button>
+        </form>
+        <button onclick="window.addParticipant.close();" aria-label="close" class="x">❌</button>
+    </dialog>
+
+    <script src="bundles/class.bundle.js"></script>
+</body>
+
+</html>

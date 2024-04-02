@@ -106,7 +106,7 @@ editExamForm.addEventListener('submit', (e) => {
     updateDoc(exam, {
         name: editExamForm.name.value,
         description: editExamForm.description.value,
-        date: Timestamp.fromDate(editExamForm.date.value.toDate()),
+        date: Timestamp.fromDate(new Date(editExamForm.date.value)),
     }).then(() => {
         console.log("Document successfully updated!");
         window.editExam.close();

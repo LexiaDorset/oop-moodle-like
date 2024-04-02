@@ -94,6 +94,21 @@
                     </tbody>
                 </table>
             </div>
+
+
+
+            <div class="table-wrapper">
+                <table class="fl-table">
+                    <thead>
+                        <tr id="tr-class">
+                            <th>Class Name</th>
+                        </tr>
+                    </thead>
+                    <tbody id="list-class" class="list-courses">
+
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 
@@ -170,6 +185,18 @@
         </form>
         <button onclick="window.editModule.close();" aria-label="close" class="x">❌</button>
     </dialog>
+
+    <dialog id="addClass">
+        <form class="add-class">
+            <h3>Add a new class</h3>
+            <label for="module">Module</label>
+            <select name="module" id="selectClassAdd" required>
+            </select>
+            <button>Add</button>
+        </form>
+        <button onclick="window.addClass.close();" aria-label="close" class="x">❌</button>
+    </dialog>
+
 
     <script src="bundles/module.bundle.js"></script>
 </body>

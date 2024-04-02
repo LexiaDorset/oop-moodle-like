@@ -10,6 +10,7 @@ module.exports = {
         exam: './src/exam.js',
         profile: './src/profile.js',
         courses: './src/courses.js',
+        class: './src/class.js',
     },
     output: {
         path: path.resolve(__dirname, 'dist'),

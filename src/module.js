@@ -13,7 +13,7 @@ import {
     addDoc, deleteDoc, doc,
     query, where,
     orderBy, serverTimestamp,
-    getDoc, child, get, Timestamp, updateDoc
+    getDoc, child, get, Timestamp, updateDoc, getDocs
 } from 'firebase/firestore';
 
 import * as global from "./global.js";
@@ -478,6 +478,142 @@ editModuleForm.addEventListener('submit', (e) => {
 
 
 // *-------------------------------------------------------------------------------* //
+// *-------------------------- Add Class to Select ----------------------------* //
+// *-------------------------------------------------------------------------------* //
+
+function addClassSelect() {
+    onSnapshot(global.classRef, (querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+            if (document.getElementById(doc.id + "toC") != null) return;
+            addClassToSelect(global.getClassName(doc.data()), doc.id);
+        });
+    });
+}
+
+
+let selectClass = document.getElementById('selectClassAdd');
+function addClassToSelect(name, key) {
+    if (document.getElementById(key + "addC")) return;
+    const option = document.createElement("option");
+    option.value = name;
+    option.text = name;
+    option.id = key + "addC";
+    selectClass.appendChild(option);
+}
+
+let formAddClass = document.querySelector('.add-class');
+formAddClass.addEventListener('submit', (e) => {
+    e.preventDefault();
+    if (selectClass.selectedIndex == -1) return;
+    let classId = selectClass.options[selectClass.selectedIndex].id.slice(0, -4);
+    addDoc(global.classmoduleRef, {
+        class_id: classId,
+        module_id: moduleId,
+    })
+        .then(() => {
+            console.log('Class added to user');
+            document.getElementById(classId + "addC").remove();
+        })
+        .catch((error) => {
+            console.error('Error adding Class:', error);
+        });
+    formAddClass.reset();
+    window.addClass.close();
+});
+
+let listClass = document.getElementById('list-class');
+
+function addClass() {
+    let classQuery = query(global.classmoduleRef, where(global.classModuleModuleId, '==', moduleId));
+    onSnapshot(classQuery, (querySnapshot) => {
+        querySnapshot.forEach((docu) => {
+            let classId = global.getClassModuleClassId(docu.data());
+            getDoc(doc(global.classRef, classId)).then((docu2) => {
+                if (document.getElementById(docu2.id + "toC") != null) return;
+                /* if (document.getElementById(classId + "addM") != null) {
+                     document.getElementById(classId + "addM").remove();
+                     console.log("Suppression de l'option");
+                 }*/
+                const data2 = docu2.data();
+                let a = document.createElement('a');
+                a.innerText = global.getClassName(data2);
+                let tr = document.createElement('tr');
+                tr.id = docu2.id + "classL";
+                let td1 = document.createElement('td');
+                a.href = "class.html?id=" + docu2.id;
+                td1.append(a);
+                tr.append(td1);
+                if (role == global.roleAdmin) {
+                    let td4 = document.createElement('td');
+                    let i = document.createElement('i');
+                    i.classList.add("fas", "fa-trash-alt");
+                    i.onclick = function () {
+                        if (window.confirm("Are you sure you want to delete this class from the module?") == false) return;
+                        deleteDoc(doc(global.classmoduleRef, docu.id)).then(() => {
+                            console.log('Class deleted');
+                            document.getElementById(docu2.id + "toC").remove();
+                            addClassToSelect(global.getClassName(data2), docu2.id);
+                        }).catch((error) => {
+                            console.error('Error deleting Class:', error);
+                        });
+                    };
+                    td4.append(i);
+                    tr.append(td4);
+                }
+                addUserOfClass(docu2.id);
+                tr.id = docu2.id + "toC";
+                listClass.append(tr);
+            });
+        });
+    });
+}
+async function addUserOfClass(classId) {
+    let userQuerye = query(global.userclassRef, where(global.userClassClassId, '==', classId));
+    const querySnapshot = await getDocs(userQuerye);
+    for (const docu of querySnapshot.docs) {
+        let userId2 = global.getUserClassUserId(docu.data());
+        let userModuleQuery = query(global.usermoduleRef, where(global.usermoduleId, '==', moduleId), where(global.usermoduleUserId, '==', userId2));
+        const userModuleSnapshot = await getDocs(userModuleQuery);
+        if (userModuleSnapshot.empty) {
+            addDoc(global.usermoduleRef, {
+                module_id: moduleId,
+                user_id: userId2,
+            }).then(() => {
+                console.log('User added to module');
+            }).catch((error) => {
+                console.error('Error adding User:', error);
+            });
+        }
+    }
+}/*
+function addUserOfClass(classId) {
+    let userQuery = query(global.userclassRef, where(global.userClassClassId, '==', classId));
+    onSnapshot(userQuery, (querySnapshot) => {
+        querySnapshot.forEach((docu) => {
+            let userId2 = global.getUserClassUserId(docu.data());
+            let userModuleQuery = query(global.usermoduleRef, where(global.usermoduleId, '==', moduleId), where(global.usermoduleUserId, '==', userId2));
+            // Check if the user is already in the module
+            onSnapshot(userModuleQuery, (querySnapshot) => {
+                if (querySnapshot.size > 0) {
+                    return;
+                }
+                else {
+                    addDoc(global.usermoduleRef, {
+                        module_id: moduleId,
+                        user_id: userId2,
+                    }).then(() => {
+                        console.log('User added to module');
+                    }).catch((error) => {
+                        console.error('Error adding User:', error);
+                    });
+                }
+            });
+        });
+    });
+}*/
+
+
+// *-------------------------------------------------------------------------------* //
 // *-------------------------- Profile Redirection ----------------------------* //
 // *-------------------------------------------------------------------------------* //
 
@@ -525,6 +661,7 @@ onAuthStateChanged(auth, (user) => {
                     addDetailsModule().then(() => {
                         console.log("student");
                         document.body.style.display = "block";
+                        addClass();
                         if (courseType == "participants") {
                             document.querySelector(".participants-page").style.display = "block";
                             participantsButton.classList.add("active");
@@ -539,13 +676,22 @@ onAuthStateChanged(auth, (user) => {
                     });
                 }
                 else {
+                    let div = document.createElement('div');
+                    div.classList.add("div-button");
                     let button = document.createElement('button');
-                    button.classList.add("buttonAdd");
+                    button.classList.add("buttonAddT");
                     button.onclick = function () {
                         window.addParticipant.showModal();
                     };
                     button.innerText = "Add a user";
-                    document.querySelector(".participants-page").append(button);
+                    let button2 = document.createElement('button');
+                    button2.classList.add("buttonAddT");
+                    button2.onclick = function () {
+                        window.addClass.showModal();
+                    };
+                    button2.innerText = "Add a class";
+                    div.append(button, button2);
+                    document.querySelector(".participants-page").append(div);
                     let th = document.createElement('th');
                     th.innerText = "Delete";
                     document.getElementById("tr-users").append(th);
@@ -566,6 +712,11 @@ onAuthStateChanged(auth, (user) => {
                                 console.error('Error deleting Module:', error);
                             });
                         });
+                        addClass();
+
+                        let th2 = document.createElement('th');
+                        th2.innerText = "Delete";
+                        document.getElementById("tr-class").append(th2);
                     }
 
 
@@ -575,6 +726,8 @@ onAuthStateChanged(auth, (user) => {
                     document.querySelector(".h-c").innerHTML += `<div class="add-button" id="add-course" onclick="window.addCourse.showModal()"> <i
                     class="fa fa-plus py-2 mr-3"></i></div>`
                     addDetailsModule().then(() => {
+                        addClassSelect();
+
                         if (role == global.roleAdmin) {
                             let editModuleButton = document.getElementById('editButtonModule');
                             editModuleButton.addEventListener('click', () => {

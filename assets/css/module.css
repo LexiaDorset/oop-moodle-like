@@ -19,9 +19,22 @@ h3 {
     display: flex;
 }
 
-.buttonAdd {
-    margin-left: auto;
-    margin-right: auto;
+button {
+    padding: 1%;
+    cursor: pointer;
+}
+
+.delete-margin {
+    margin-left: 10%;
+}
+
+.div-button {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+.buttonAddT {
     margin-top: 2%;
     padding: 10px;
     cursor: pointer;
@@ -33,15 +46,6 @@ h3 {
     display: flex;
 }
 
-.buttonAdd:hover {
+.buttonAddT:hover {
     background-color: #334e77;
-}
-
-button {
-    padding: 1%;
-    cursor: pointer;
-}
-
-.delete-margin {
-    margin-left: 10%;
 }

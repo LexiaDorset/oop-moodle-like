@@ -38,6 +38,8 @@ const headProfile = document.getElementById('head-profile');
 const detailsProfile = document.getElementById('list-profile');
 
 const listCourses = document.getElementById('list-courses');
+const listClass = document.getElementById('list-class');
+
 const editUserForm = document.querySelector('.edit-user');
 let editUserButton = document.getElementById('editButtonUser');
 let editUserFormU = document.querySelector('.edit-user-u');
@@ -68,6 +70,50 @@ function addUserDetails() {
         }
     }).catch((error) => {
         console.log("Error getting document:", error);
+    });
+}
+
+function addClass() {
+    let classQuery = query(global.userclassRef, where(global.userClassUserId, '==', profileId));
+    onSnapshot(classQuery, (querySnapshot) => {
+        querySnapshot.forEach((docu) => {
+            let classId = global.getUserClassClassId(docu.data());
+            getDoc(doc(global.classRef, classId)).then((docu2) => {
+                if (document.getElementById(docu2.id + "toC") != null) return;
+                /* if (document.getElementById(classId + "addM") != null) {
+                     document.getElementById(classId + "addM").remove();
+                     console.log("Suppression de l'option");
+                 }*/
+                const data2 = docu2.data();
+                let a = document.createElement('a');
+                a.innerText = global.getClassName(data2);
+                let tr = document.createElement('tr');
+                tr.id = docu2.id + "classL";
+                let td1 = document.createElement('td');
+                a.href = "class.html?id=" + docu2.id;
+                td1.append(a);
+                tr.append(td1);
+                tr.id = docu2.id + "toC";
+                if (role == global.roleAdmin) {
+                    let td4 = document.createElement('td');
+                    let i = document.createElement('i');
+                    i.classList.add("fas", "fa-trash-alt");
+                    i.onclick = function () {
+                        if (window.confirm("Are you sure you want to delete this user from this class?") == false) return;
+                        global.deleteClassUser(classId, profileId).then(() => {
+                            console.log("User class deleted");
+                            addClassToSelect(global.getClassName(data2), classId);
+                            document.getElementById(docu2.id + "toC").remove();
+                        }).catch((error) => {
+                            console.error("Error deleting User Class:", error);
+                        });
+                    };
+                    td4.append(i);
+                    tr.append(td4);
+                }
+                listClass.append(tr);
+            });
+        });
     });
 }
 
@@ -223,12 +269,49 @@ editUserFormU.addEventListener('submit', (e) => {
     window.editUser.close();
 });
 
-
 // *-------------------------------------------------------------------------------* //
-// *-------------------------- Delete User ----------------------------* //
+// *-------------------------- Add Class to Select ----------------------------* //
 // *-------------------------------------------------------------------------------* //
 
+function addClassSelect() {
+    onSnapshot(global.classRef, (querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+            if (document.getElementById(doc.id + "toC") != null) return;
+            addClassToSelect(global.getClassName(doc.data()), doc.id);
+        });
+    });
+}
 
+
+let selectClass = document.getElementById('selectClassAdd');
+function addClassToSelect(name, key) {
+    if (document.getElementById(key + "addC")) return;
+    const option = document.createElement("option");
+    option.value = name;
+    option.text = name;
+    option.id = key + "addC";
+    selectClass.appendChild(option);
+}
+
+let formAddClass = document.querySelector('.add-class');
+formAddClass.addEventListener('submit', (e) => {
+    e.preventDefault();
+    if (selectClass.selectedIndex == -1) return;
+    let classId = selectClass.options[selectClass.selectedIndex].id.slice(0, -4);
+    addDoc(global.userclassRef, {
+        class_id: classId,
+        user_id: profileId,
+    })
+        .then(() => {
+            console.log('Class added to user');
+            document.getElementById(classId + "addC").remove();
+        })
+        .catch((error) => {
+            console.error('Error adding Class:', error);
+        });
+    formAddClass.reset();
+    window.addClass.close();
+});
 
 
 
@@ -274,6 +357,15 @@ onAuthStateChanged(auth, (_user) => {
                     }
                     addUserDetails();
                     addCourses();
+                    addClass();
+                    getDoc(userProfile).then((docu2) => {
+                        if (global.getUserRole(docu2.data()) == global.roleFaculty) {
+                            document.querySelector(".list-class").remove();
+                        }
+                        else {
+                            addClass();
+                        }
+                    });
                     document.body.style.display = "block";
                     console.log("faculty");
                 }
@@ -303,6 +395,14 @@ onAuthStateChanged(auth, (_user) => {
                     });
                     addUserDetails();
                     addCourses();
+                    getDoc(userProfile).then((docu2) => {
+                        if (global.getUserRole(docu2.data()) == global.roleFaculty) {
+                            document.querySelector(".list-class").remove();
+                        }
+                        else {
+                            addClass();
+                        }
+                    });
                     document.body.style.display = "block";
                     console.log("student");
                 }
@@ -310,6 +410,9 @@ onAuthStateChanged(auth, (_user) => {
                     let th = document.createElement('th');
                     th.innerText = "Delete";
                     document.getElementById("tr-modules").append(th);
+                    let th2 = document.createElement('th');
+                    th2.innerText = "Delete";
+                    document.getElementById("tr-class").append(th2);
                     document.getElementById("h2-profile").innerHTML += `<i class="fas fa-trash-alt delete-object" id="delete-user"></i>`
 
                     const buttonDeleteUser = document.getElementById('delete-user')
@@ -324,6 +427,9 @@ onAuthStateChanged(auth, (_user) => {
                             console.error('Error deleting Module:', error);
                         });
                     });
+
+                    document.getElementById('head-class').innerHTML += `<div class="add-button" onclick="window.addClass.showModal()"><i class="fa fa-plus py-2 mr-3"></i>
+                    </div>`
 
                     document.getElementById('head-course').innerHTML += `<div class="add-button" onclick="window.addModule.showModal()"><i class="fa fa-plus py-2 mr-3"></i>
                     </div>`
@@ -344,6 +450,15 @@ onAuthStateChanged(auth, (_user) => {
                     addUserDetails();
                     addCourses().then(() => {
                         addModules();
+                        getDoc(userProfile).then((docu2) => {
+                            if (global.getUserRole(docu2.data()) == global.roleFaculty) {
+                                document.querySelector(".list-class").remove();
+                            }
+                            else {
+                                addClass();
+                                addClassSelect();
+                            }
+                        });
                         document.body.style.display = "block";
                     });
                     console.log("admin");

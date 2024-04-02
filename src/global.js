@@ -86,6 +86,9 @@ export const userCollection = "user";
 export const usermoduleCollection = "usermodule";
 export const courseCollection = "course";
 export const gradesCollection = "grade";
+export const classCollection = "class";
+export const userclassCollection = "userclass";
+export const classmoduleCollection = "classmodule";
 
 // Collections references
 export const examRef = collection(db, examCollection)
@@ -94,6 +97,9 @@ export const userRef = collection(db, userCollection)
 export const usermoduleRef = collection(db, usermoduleCollection)
 export const courseRef = collection(db, courseCollection)
 export const gradesRef = collection(db, gradesCollection)
+export const classRef = collection(db, classCollection)
+export const userclassRef = collection(db, userclassCollection)
+export const classmoduleRef = collection(db, classmoduleCollection)
 
 // Modules
 export const moduleNameString = "name";
@@ -132,6 +138,17 @@ export const examModuleId = "module_id";
 export const examDate = "date";
 export const examName = "name";
 export const examDescription = "description";
+
+// Class
+export const className = "name";
+
+// User Class
+export const userClassUserId = "user_id";
+export const userClassClassId = "class_id";
+
+// Class Module
+export const classModuleClassId = "class_id";
+export const classModuleModuleId = "module_id";
 
 // Modules get values
 export function getModuleName(data) {
@@ -208,6 +225,27 @@ export function getGradesExamId(data) {
     return data.exam_id;
 }
 
+// Class get values
+export function getClassName(data) {
+    return data.name;
+}
+
+// User Class get values
+export function getUserClassUserId(data) {
+    return data.user_id;
+}
+export function getUserClassClassId(data) {
+    return data.class_id;
+}
+
+// Class Module get values
+export function getClassModuleClassId(data) {
+    return data.class_id;
+}
+export function getClassModuleModuleId(data) {
+    return data.module_id;
+}
+
 
 export function showCourses(doc1, doc2, link, name, act) {
     let a = document.createElement("a");
@@ -250,10 +288,12 @@ export function deleteModule(moduleId) {
             .then(() => {
                 // Delete tous les users, exams et courses attachés °E°
                 deleteModuleUserWithModuleId(moduleId).then(() => {
-                    deleteCourseWithModuleId(moduleId).then(() => {
-                        deleteExamWithModuleId(moduleId).then(() => {
-                            console.log('Module deleted');
-                            resolve();
+                    deleteClassModuleWithModuleId(moduleId).then(() => {
+                        deleteCourseWithModuleId(moduleId).then(() => {
+                            deleteExamWithModuleId(moduleId).then(() => {
+                                console.log('Module deleted');
+                                resolve();
+                            });
                         });
                     });
                 });
@@ -261,6 +301,27 @@ export function deleteModule(moduleId) {
             .catch((error) => {
                 console.error('Error deleting Module:', error);
             });
+    })
+}
+
+export function deleteClassModuleWithModuleId(moduleId) {
+    return new Promise((resolve, reject) => {
+        const q = query(classmoduleRef, where(classModuleModuleId, "==", moduleId));
+        getDocs(q).then((querySnapshot) => {
+            if (querySnapshot.empty) {
+                resolve();
+            }
+            querySnapshot.forEach((doc) => {
+                deleteDoc(doc.ref)
+                    .then(() => {
+                        console.log('ClassModule deleted');
+                        resolve();
+                    })
+                    .catch((error) => {
+                        console.error('Error deleting ClassModule:', error);
+                    });
+            });
+        });
     })
 }
 
@@ -287,6 +348,63 @@ export function deleteGrade(gradeId) {
             .catch((error) => {
                 console.error('Error deleting Grade:', error);
             });
+    })
+}
+
+export function deleteClassUser(classId, userId) {
+    return new Promise((resolve, reject) => {
+        const q = query(userclassRef, where(userClassClassId, "==", classId), where(userClassUserId, "==", userId));
+        getDocs(q).then((querySnapshot) => {
+            if (querySnapshot.empty) {
+                resolve();
+            }
+            querySnapshot.forEach((doc) => {
+                deleteDoc(doc.ref)
+                    .then(() => {
+                        resolve();
+                        console.log('UserClass deleted');
+                    })
+                    .catch((error) => {
+                        console.error('Error deleting UserModule:', error);
+                    });
+            });
+        });
+    })
+}
+
+export function deleteClass(classId) {
+    return new Promise((resolve, reject) => {
+        deleteDoc(doc(classRef, classId))
+            .then(() => {
+                deleteClassUserWithClassId(classId).then(() => {
+                    console.log('Class deleted');
+                    resolve();
+                });
+            })
+            .catch((error) => {
+                console.error('Error deleting Class:', error);
+            });
+    })
+}
+
+export function deleteClassUserWithClassId(classId) {
+    return new Promise((resolve, reject) => {
+        const q = query(userclassRef, where(userClassClassId, "==", classId));
+        getDocs(q).then((querySnapshot) => {
+            if (querySnapshot.empty) {
+                resolve();
+            }
+            querySnapshot.forEach((doc) => {
+                deleteDoc(doc.ref)
+                    .then(() => {
+                        console.log('UserClass deleted');
+                        resolve();
+                    })
+                    .catch((error) => {
+                        console.error('Error deleting UserModule:', error);
+                    });
+            });
+        });
     })
 }
 
@@ -349,7 +467,9 @@ export function deleteModuleUserWithModuleId(moduleId) {
             if (querySnapshot.empty) {
                 resolve();
             }
+            console.log(querySnapshot.size);
             querySnapshot.forEach((doc) => {
+                console.log("User Module Deleted" + doc.data().getUserModuleUserId + " Module Id:" + doc.data().getUserModuleId);
                 deleteDoc(doc.ref)
                     .then(() => {
                         console.log('UserModule deleted');
