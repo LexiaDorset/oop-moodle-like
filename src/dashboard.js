@@ -117,7 +117,7 @@ function addModulesToListd(ddata, docu) {
     a1.href = "module.html?id=" + docu.id + "&type=course";
     let img = document.createElement('img');
     img.classList.add("card-img-top");
-    img.src = "../../assets/img/module_card.png";
+    img.src = "../assets/img/module_card.png";
     a1.appendChild(img);
 
 
