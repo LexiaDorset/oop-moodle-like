@@ -433,6 +433,30 @@ export function deleteClassModule(classId) {
     })
 }
 
+export function deleteClassModuleWithClassIdModuleId(classId, moduleId) {
+    return new Promise((resolve, reject) => {
+        const q = query(classmoduleRef, where(classModuleClassId, "==", classId), where(classModuleModuleId, "==", moduleId));
+        getDocs(q).then((querySnapshot) => {
+            if (querySnapshot.empty) {
+                resolve();
+            }
+            querySnapshot.forEach((doc) => {
+                let moduleId = getClassModuleModuleId(doc.data());
+                deleteDoc(doc.ref)
+                    .then(() => {
+                        deleteUserFromModuleWithClass(classId, moduleId).then(() => {
+                            resolve();
+                        });
+                        console.log('ClassModule deleted');
+                    })
+                    .catch((error) => {
+                        console.error('Error deleting ClassModule:', error);
+                    });
+            });
+        });
+    })
+}
+
 export function deleteOneUserFromModuleWithClass(classId, moduleId, userId2) {
     return new Promise((resolve, reject) => {
         let userClassQuery = query(userclassRef, where(userClassUserId, '==', userId2));

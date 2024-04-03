@@ -68,6 +68,23 @@
                     </tbody>
                 </table>
             </div>
+
+            <div class="table-wrapper">
+                <table class="fl-table">
+                    <thead>
+                        <tr id="tr-modules">
+                            <th>Module name</th>
+                        </tr>
+                    </thead>
+                    <tbody class="participants" id="list-modules"> <!--Keep the id-->
+                        <!-- The elements are added dynamically, exemple of what it look like:
+                <tr>
+                   <td>TestNewCoucou</td>
+                </tr>
+                -->
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 
@@ -90,6 +107,17 @@
             <button>Add</button>
         </form>
         <button onclick="window.addParticipant.close();" aria-label="close" class="x">❌</button>
+    </dialog>
+
+    <dialog id="addModule">
+        <form class="add-module">
+            <h3>Add a new module</h3>
+            <label for="module">Module</label>
+            <select name="module" id="selectModuleAdd" required>
+            </select>
+            <button>Add</button>
+        </form>
+        <button onclick="window.addModule.close();" aria-label="close" class="x">❌</button>
     </dialog>
 
     <script src="bundles/class.bundle.js"></script>

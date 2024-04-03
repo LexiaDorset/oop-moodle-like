@@ -443,3 +443,26 @@ h1 {
 .buttonAdd:hover {
     background-color: #334e77;
 }
+
+
+.div-button {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+.buttonAddT {
+    margin-top: 2%;
+    padding: 10px;
+    cursor: pointer;
+    background-color: #253fa9;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+    display: flex;
+}
+
+.buttonAddT:hover {
+    background-color: #334e77;
+}

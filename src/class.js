@@ -199,6 +199,113 @@ editClassForm.addEventListener("submit", (e) => {
   });
 });
 
+//*-------------------------------------------------------------------------------* //
+// *-------------------------- Add Module to List -------------------------------* //
+// *-------------------------------------------------------------------------------* //
+
+function addModules() {
+  return new Promise((resolve, reject) => {
+    const userQuery = query(
+      global.classmoduleRef,
+      where(global.classModuleClassId, "==", classId)
+    );
+    onSnapshot(userQuery, (querySnapshot) => {
+      if (querySnapshot.size == 0) resolve();
+      let totalSize = querySnapshot.size;
+      let count = 0;
+      querySnapshot.forEach((docu) => {
+        const ddata = docu.data();
+        const moduleId = global.getClassModuleModuleId(ddata);
+        getDoc(doc(global.moduleRef, moduleId)).then((docu) => {
+          if (docu.exists()) {
+            if (document.getElementById(moduleId + "module") != null) return;
+            const ddata = docu.data();
+            let tr = document.createElement("tr");
+            tr.id = moduleId + "module";
+            let td = document.createElement("td");
+            let a = document.createElement("a");
+            a.innerText = global.getModuleName(ddata);
+            a.href = "module.html?id=" + moduleId;
+            td.append(a);
+            tr.append(td);
+            if (role == global.roleAdmin) {
+              let td2 = document.createElement("td");
+              let i = document.createElement("i");
+              i.classList.add("fas", "fa-trash-alt");
+              i.onclick = function () {
+                deleteModule(moduleId, global.getModuleName(ddata));
+              };
+              td2.append(i);
+              tr.append(td2);
+            }
+            document.getElementById("list-modules").appendChild(tr);
+            if (++count == totalSize) resolve();
+          } else {
+            console.log("No such document!");
+            if (++count == totalSize) resolve();
+          }
+        });
+      });
+    });
+  });
+}
+
+function deleteModule(moduleId, name) {
+  if (window.confirm("Are you sure you want to delete this module from this class?") == false) return;
+  global.deleteClassModuleWithClassIdModuleId(classId, moduleId).then(() => {
+    console.log("Module class deleted");
+    document.getElementById(moduleId + "module").remove();
+    addModuleToSelect(name, moduleId);
+  })
+    .catch((error) => {
+      console.error("Error deleting Module:", error);
+    });
+}
+
+// *-------------------------------------------------------------------------------* //
+// *---------------------------- Add Module To Select --------------------------------* //
+// *-------------------------------------------------------------------------------* //
+
+function addModulesSelect() {
+  onSnapshot(global.moduleRef, (querySnapshot) => {
+    querySnapshot.forEach((docu) => {
+      if (document.getElementById(docu.id + "addM") || document.getElementById(docu.id + "module")) return;
+      getDoc(doc(global.moduleRef, docu.id)).then((docu) => {
+        addModuleToSelect(global.getModuleName(docu.data()), docu.id);
+      });
+    });
+  });
+}
+let selectModule = document.getElementById("selectModuleAdd");
+
+function addModuleToSelect(name, key) {
+  if (document.getElementById(key + "addM")) return;
+  const option = document.createElement("option");
+  option.value = name;
+  option.text = name;
+  option.id = key + "addM";
+  selectModule.appendChild(option);
+}
+
+
+// *-------------------------------------------------------------------------------* //
+// *------------------------------ Add Module Form --------------------------------* //
+// *-------------------------------------------------------------------------------* //
+let addModuleForm = document.querySelector(".add-module");
+addModuleForm.addEventListener("submit", (e) => {
+  e.preventDefault();
+  if (selectModule.selectedIndex == -1) return;
+  let moduleId = selectModule.options[selectModule.selectedIndex].id.slice(0, -4);
+  addDoc(global.classmoduleRef, {
+    [global.classModuleClassId]: classId,
+    [global.classModuleModuleId]: moduleId,
+  }).then(() => {
+    console.log("Document successfully written!");
+    window.addModule.close();
+    document.getElementById(moduleId + "addM").remove();
+  });
+});
+
 // *-------------------------------------------------------------------------------* //
 // *-------------------------------------------------------------------------------* //
 // *----------------------- AUTHENTIFICATIONS -------------------------------* //
@@ -229,17 +336,31 @@ onAuthStateChanged(auth, (_user) => {
 
             if (role == global.roleAdmin) {
               global.navButton(profile, docu.id, document.querySelector(".dropdown-toggle"), document.querySelector(".dropdown"), document.querySelector(".logout"), auth, true);
+              let div = document.createElement('div');
+              div.classList.add("div-button");
               let button = document.createElement("button");
-              button.classList.add("buttonAdd");
+              button.classList.add("buttonAddT");
               button.onclick = function () {
                 window.addParticipant.showModal();
               };
               button.innerText = "Add a user";
-              document.querySelector(".participants-page").append(button);
+              let button2 = document.createElement("button");
+              button2.classList.add("buttonAddT");
+              button2.onclick = function () {
+                window.addModule.showModal();
+              };
+              button2.innerText = "Add a module";
+              div.append(button, button2);
+              document.querySelector(".participants-page").append(div);
 
               let th = document.createElement("th");
               th.innerText = "Delete";
               document.getElementById("tr-users").append(th);
+
+              let th2 = document.createElement('th');
+              th2.innerText = "Delete";
+              document.getElementById("tr-modules").append(th2);
+
 
               let editUserButton = document.createElement("i");
               editUserButton.classList.add("fas", "fa-edit", "edit-object");
@@ -266,6 +387,9 @@ onAuthStateChanged(auth, (_user) => {
                   });
               });
               addUserToList();
+              addModules().then(() => {
+                addModulesSelect();
+              });
             }
             else {
               global.navButton(profile, docu.id, document.querySelector(".dropdown-toggle"), document.querySelector(".dropdown"), document.querySelector(".logout"), auth, false);
