@@ -548,11 +548,12 @@ function addClass() {
                     let i = document.createElement('i');
                     i.classList.add("fas", "fa-trash-alt");
                     i.onclick = function () {
-                        if (window.confirm("Are you sure you want to delete this class from the module?") == false) return;
+                        if (window.confirm("Are you sure you want to delete this class from this module?") == false) return;
                         deleteDoc(doc(global.classmoduleRef, docu.id)).then(() => {
-                            console.log('Class deleted');
-                            document.getElementById(docu2.id + "toC").remove();
-                            addClassToSelect(global.getClassName(data2), docu2.id);
+                            console.log('Class deleted from module');
+                            deleteUserFromModule(classId);
+                            document.getElementById(classId + "toC").remove();
+                            addClassToSelect(global.getClassName(data2), classId);
                         }).catch((error) => {
                             console.error('Error deleting Class:', error);
                         });
@@ -567,6 +568,44 @@ function addClass() {
         });
     });
 }
+
+function deleteUserFromModule(classId) {
+    let userQuery = query(global.userclassRef, where(global.userClassClassId, '==', classId));
+    getDocs(userQuery).then((querySnapshot) => {
+        querySnapshot.forEach((docu) => {
+            let userId2 = global.getUserClassUserId(docu.data());
+            let userClassQuery = query(global.userclassRef, where(global.userClassUserId, '==', userId2));
+            getDocs(userClassQuery).then((querySnapshot) => {
+                let totalsize = querySnapshot.size;
+                if (totalsize > 1) {
+                    let count = 0;
+                    querySnapshot.forEach((docu3) => {
+                        count++;
+                        if (docu3.id != docu.id) {
+                            let classId2 = global.getUserClassClassId(docu3.data());
+                            let classModuleQuery = query(global.classmoduleRef, where(global.classModuleClassId, '==', classId2), where(global.classModuleModuleId, '==', moduleId));
+                            getDocs(classModuleQuery).then((querySnapshot) => {
+                                if (querySnapshot.empty && count == totalsize) {
+                                    global.deleteModuleUser(moduleId, userId2);
+                                    document.getElementById(userId2 + "parti").remove();
+                                    return;
+                                }
+                            });
+                        }
+                    });
+                }
+                else {
+                    console.log("Suppression de l'utilisateur");
+                    global.deleteModuleUser(moduleId, userId2);
+                    document.getElementById(userId2 + "parti").remove();
+                }
+            });
+        });
+    }).catch((error) => {
+        console.error('Error getting documents:', error);
+    });
+}
+
 async function addUserOfClass(classId) {
     let userQuerye = query(global.userclassRef, where(global.userClassClassId, '==', classId));
     const querySnapshot = await getDocs(userQuerye);

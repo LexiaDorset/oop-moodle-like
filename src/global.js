@@ -354,6 +354,7 @@ export function deleteGrade(gradeId) {
 export function deleteClassUser(classId, userId) {
     return new Promise((resolve, reject) => {
         const q = query(userclassRef, where(userClassClassId, "==", classId), where(userClassUserId, "==", userId));
+        const q2 = query(classmoduleRef, where(classModuleClassId, "==", classId));
         getDocs(q).then((querySnapshot) => {
             if (querySnapshot.empty) {
                 resolve();
@@ -361,7 +362,22 @@ export function deleteClassUser(classId, userId) {
             querySnapshot.forEach((doc) => {
                 deleteDoc(doc.ref)
                     .then(() => {
-                        resolve();
+                        getDocs(q2).then((querySnapshot) => {
+                            if (querySnapshot.empty) {
+                                resolve();
+                            }
+                            let count = 0;
+                            let size = querySnapshot.size;
+                            querySnapshot.forEach((doc) => {
+                                let moduleId = getClassModuleModuleId(doc.data());
+                                deleteOneUserFromModuleWithClass(classId, moduleId, userId).then(() => {
+                                    count++;
+                                    if (count == size) {
+                                        resolve();
+                                    }
+                                });
+                            });
+                        });
                         console.log('UserClass deleted');
                     })
                     .catch((error) => {
@@ -376,16 +392,124 @@ export function deleteClass(classId) {
     return new Promise((resolve, reject) => {
         deleteDoc(doc(classRef, classId))
             .then(() => {
-                deleteClassUserWithClassId(classId).then(() => {
+                deleteClassModule(classId).then(() => {
                     console.log('Class deleted');
-                    resolve();
+                    deleteClassUserWithClassId(classId).then(() => {
+                        resolve();
+                    });
                 });
-            })
-            .catch((error) => {
+            }).catch((error) => {
                 console.error('Error deleting Class:', error);
             });
     })
 }
+
+export function deleteClassModule(classId) {
+    return new Promise((resolve, reject) => {
+        const q = query(classmoduleRef, where(classModuleClassId, "==", classId));
+        getDocs(q).then((querySnapshot) => {
+            if (querySnapshot.empty) {
+                resolve();
+            }
+            let count = 0;
+            let size = querySnapshot.size;
+            querySnapshot.forEach((doc) => {
+                let moduleId = getClassModuleModuleId(doc.data());
+                deleteDoc(doc.ref)
+                    .then(() => {
+                        deleteUserFromModuleWithClass(classId, moduleId).then(() => {
+                            count++;
+                            if (count == size) {
+                                resolve();
+                            }
+                        });
+                        console.log('ClassModule deleted');
+                    })
+                    .catch((error) => {
+                        console.error('Error deleting ClassModule:', error);
+                    });
+            });
+        });
+    })
+}
+
+export function deleteOneUserFromModuleWithClass(classId, moduleId, userId2) {
+    return new Promise((resolve, reject) => {
+        let userClassQuery = query(userclassRef, where(userClassUserId, '==', userId2));
+        getDocs(userClassQuery).then((querySnapshot) => {
+            let totalsize = querySnapshot.size;
+            if (totalsize > 1) {
+                let count = 0;
+                querySnapshot.forEach((docu3) => {
+                    count++;
+                    if (docu3.id != docu.id) {
+                        let classId2 = getUserClassClassId(docu3.data());
+                        let classModuleQuery = query(classmoduleRef, where(classModuleClassId, '==', classId2), where(classModuleModuleId, '==', moduleId));
+                        getDocs(classModuleQuery).then((querySnapshot) => {
+                            if (querySnapshot.empty && count == totalsize) {
+                                deleteModuleUser(moduleId, userId2).then(() => {
+                                    resolve();
+                                });
+                            }
+                        });
+                    }
+                    else if (count == totalsize) {
+                        resolve();
+                    }
+                });
+            }
+            else {
+                deleteModuleUser(moduleId, userId2).then(() => {
+                    resolve();
+                });
+            }
+        });
+    });
+}
+
+export function deleteUserFromModuleWithClass(classId, moduleId) {
+    return new Promise((resolve, reject) => {
+        let userQuery = query(userclassRef, where(userClassClassId, '==', classId));
+        getDocs(userQuery).then((querySnapshot) => {
+            querySnapshot.forEach((docu) => {
+                console.log("User Id", getUserClassUserId(docu.data()));
+                let userId2 = getUserClassUserId(docu.data());
+                let userClassQuery = query(userclassRef, where(userClassUserId, '==', userId2));
+                getDocs(userClassQuery).then((querySnapshot) => {
+                    let totalsize = querySnapshot.size;
+                    if (totalsize > 1) {
+                        let count = 0;
+                        querySnapshot.forEach((docu3) => {
+                            count++;
+                            if (docu3.id != docu.id) {
+                                let classId2 = getUserClassClassId(docu3.data());
+                                let classModuleQuery = query(classmoduleRef, where(classModuleClassId, '==', classId2), where(classModuleModuleId, '==', moduleId));
+                                getDocs(classModuleQuery).then((querySnapshot) => {
+                                    if (querySnapshot.empty && count == totalsize) {
+                                        deleteModuleUser(moduleId, userId2).then(() => {
+                                            resolve();
+                                        });
+                                    }
+                                });
+                            }
+                            else if (count == totalsize) {
+                                resolve();
+                            }
+                        });
+                    }
+                    else {
+                        deleteModuleUser(moduleId, userId2).then(() => {
+                            resolve();
+                        });
+                    }
+                });
+            });
+        }).catch((error) => {
+            console.error('Error getting documents:', error);
+        });
+    });
+}
+
 
 export function deleteClassUserWithClassId(classId) {
     return new Promise((resolve, reject) => {
@@ -567,14 +691,42 @@ export function deleteUser(userId) {
     return new Promise((resolve, reject) => {
         deleteDoc(doc(userRef, userId))
             .then(() => {
-                deleteModuleUserWithUserId(userId).then(() => {
-                    console.log('User deleted');
-                    resolve();
+                deleteUserClass(userId).then(() => {
+                    deleteModuleUserWithUserId(userId).then(() => {
+                        console.log('User deleted');
+                        resolve();
+                    });
                 });
             })
             .catch((error) => {
                 console.error('Error deleting User:', error);
             });
+    })
+}
+
+export function deleteUserClass(userId) {
+    return new Promise((resolve, reject) => {
+        const q = query(userclassRef, where(userClassUserId, "==", userId));
+        getDocs(q).then((querySnapshot) => {
+            if (querySnapshot.empty) {
+                resolve();
+            }
+            querySnapshot.forEach((doc) => {
+                let size = querySnapshot.size;
+                let count = 0;
+                deleteDoc(doc.ref)
+                    .then(() => {
+                        console.log('UserClass deleted');
+                        count++;
+                        if (count == size) {
+                            resolve();
+                        }
+                    })
+                    .catch((error) => {
+                        console.error('Error deleting UserClass:', error);
+                    });
+            });
+        });
     })
 }
 

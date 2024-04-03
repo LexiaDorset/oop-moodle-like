@@ -100,7 +100,7 @@ function addUserToList() {
             tr.append(td, td2);
             tr.id = docu.id + "user";
             listTeachers.appendChild(tr);
-            console.log("User added");
+            //console.log("User added to list in dashboard");
         });
     });
 }

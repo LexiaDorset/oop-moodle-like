@@ -153,7 +153,7 @@ function addUserToList() {
       }
       if (global.getUserRole(ddata) != global.roleStudent) return;
       addUserToSelect(global.getUserName(ddata), docu.id);
-      console.log("User added");
+      console.log("User added to select List");
     });
   });
 }
@@ -258,7 +258,7 @@ onAuthStateChanged(auth, (_user) => {
 
                 if (window.confirm("Are you sure you want to delete this class?") == false) return;
                 global.deleteClass(classId).then(() => {
-                  console.log("Class deleted");
+                  console.log("Class deleted finish");
                   window.location.replace("./dashboard.html");
                 })
                   .catch((error) => {
