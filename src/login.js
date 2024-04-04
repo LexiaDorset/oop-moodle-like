@@ -135,6 +135,7 @@ let forgotPassword = () => {
         const errorMessage = error.message;
         console.log("This user doesn't exists", errorCode)
     });
+    window.resetPassword.close();
 }
 
 // Reset password form event listener 

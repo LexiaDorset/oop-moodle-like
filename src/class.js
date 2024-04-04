@@ -25,7 +25,7 @@ import {
   child,
   get,
   Timestamp,
-  updateDoc,
+  updateDoc, getDocs
 } from "firebase/firestore";
 
 import * as global from "./global.js";
@@ -169,6 +169,24 @@ addParticipantForm.addEventListener("submit", (e) => {
     [global.userClassUserId]: userId,
   }).then(() => {
     document.getElementById(userId + "addF").remove();
+    const moduleClassQuery = query(global.classmoduleRef, where(global.classModuleClassId, "==", classId));
+    getDocs(moduleClassQuery).then((querySnapshot) => {
+      querySnapshot.forEach((docu) => {
+        const moduleId = global.getClassModuleModuleId(docu.data());
+        const queryUser = query(global.usermoduleRef, where(global.usermoduleId, "==", moduleId), where(global.usermoduleUserId, "==", userId));
+        getDocs(queryUser).then((querySnapshot) => {
+          if (querySnapshot.size != 0) return;
+          else {
+            addDoc(global.usermoduleRef, {
+              [global.usermoduleId]: moduleId,
+              [global.usermoduleUserId]: userId
+            }).then(() => {
+              console.log("User module added!");
+            });
+          }
+        });
+      });
+    });
   });
   window.addParticipant.close();
 });
@@ -252,9 +270,9 @@ function addModules() {
 
 function deleteModule(moduleId, name) {
   if (window.confirm("Are you sure you want to delete this module from this class?") == false) return;
+  document.getElementById(moduleId + "module").remove();
   global.deleteClassModuleWithClassIdModuleId(classId, moduleId).then(() => {
     console.log("Module class deleted");
-    document.getElementById(moduleId + "module").remove();
     addModuleToSelect(name, moduleId);
   })
     .catch((error) => {
@@ -301,8 +319,26 @@ addModuleForm.addEventListener("submit", (e) => {
     [global.classModuleModuleId]: moduleId,
   }).then(() => {
     console.log("Document successfully written!");
-    window.addModule.close();
     document.getElementById(moduleId + "addM").remove();
+    const userClassQuery = query(global.userclassRef, where(global.userClassClassId, "==", classId));
+    getDocs(userClassQuery).then((querySnapshot) => {
+      querySnapshot.forEach((docu) => {
+        const userId5 = global.getUserClassUserId(docu.data());
+        const queryUser = query(global.usermoduleRef, where(global.usermoduleId, "==", moduleId), where(global.usermoduleUserId, "==", userId5));
+        getDocs(queryUser).then((querySnapshot) => {
+          if (querySnapshot.size != 0) return;
+          else {
+            addDoc(global.usermoduleRef, {
+              [global.usermoduleId]: moduleId,
+              [global.usermoduleUserId]: userId5
+            }).then(() => {
+              console.log("User module added!");
+            });
+          }
+        });
+      });
+    });
+    window.addModule.close();
   });
 });
 
