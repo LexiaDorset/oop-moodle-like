@@ -181,7 +181,7 @@ function addParticipants() {
                             td3.innerText = "-"
                         } else { td3.innerText = gradeUser; }
                         tr.append(td, td3, td2);
-                        if (role == global.roleAdmin || role == global.roleFaculty) {
+                        if (role == global.roleAdmin) {
                             let td4 = document.createElement('td');
                             let i = document.createElement('i');
                             i.classList.add("fas", "fa-trash-alt");
@@ -715,27 +715,29 @@ onAuthStateChanged(auth, (user) => {
                     });
                 }
                 else {
-                    let div = document.createElement('div');
-                    div.classList.add("div-button");
-                    let button = document.createElement('button');
-                    button.classList.add("buttonAddT");
-                    button.onclick = function () {
-                        window.addParticipant.showModal();
-                    };
-                    button.innerText = "Add a user";
-                    let button2 = document.createElement('button');
-                    button2.classList.add("buttonAddT");
-                    button2.onclick = function () {
-                        window.addClass.showModal();
-                    };
-                    button2.innerText = "Add a class";
-                    div.append(button, button2);
-                    document.querySelector(".participants-page").append(div);
-                    let th = document.createElement('th');
-                    th.innerText = "Delete";
-                    document.getElementById("tr-users").append(th);
+
 
                     if (role == global.roleAdmin) {
+                        let div = document.createElement('div');
+                        div.classList.add("div-button");
+                        let button = document.createElement('button');
+                        button.classList.add("buttonAddT");
+                        button.onclick = function () {
+                            window.addParticipant.showModal();
+                        };
+                        button.innerText = "Add a user";
+                        let button2 = document.createElement('button');
+                        button2.classList.add("buttonAddT");
+                        button2.onclick = function () {
+                            window.addClass.showModal();
+                        };
+                        button2.innerText = "Add a class";
+                        div.append(button, button2);
+                        document.querySelector(".participants-page").append(div);
+                        let th = document.createElement('th');
+                        th.innerText = "Delete";
+                        document.getElementById("tr-users").append(th);
+
                         document.getElementById("h2-general").innerHTML = `General<i class="fas fa-edit edit-object" id="editButtonModule"
                     onclick="window.editModule.showModal()"></i><i class="fas fa-trash-alt delete-object" id="delete-module"></i>`;
                         const buttonDeleteModule = document.getElementById('delete-module')
@@ -751,13 +753,14 @@ onAuthStateChanged(auth, (user) => {
                                 console.error('Error deleting Module:', error);
                             });
                         });
-                        addClass();
 
                         let th2 = document.createElement('th');
                         th2.innerText = "Delete";
                         document.getElementById("tr-class").append(th2);
                     }
 
+
+                    addClass();
 
 
                     document.querySelector(".header-exam").innerHTML += `<div class="add-button" id="add-exam" onclick="window.addExam.showModal()"><i

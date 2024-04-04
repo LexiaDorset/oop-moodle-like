@@ -57,23 +57,25 @@
 
         </div>
 
-        <div class="table-wrapper" style="display: none;">
-            <table class="fl-table">
-                <thead>
-                    <tr id="tr-users">
-                        <th>Full Name</th>
-                        <th>Grades</th>
-                        <th>Roles</th>
-                    </tr>
-                </thead>
-                <tbody class="grades" id="list-grades"> <!--Keep the id-->
-                    <!-- The elements are added dynamically, exemple of what it look like:
+        <div class="participants-page" style="display: none;">
+            <div class="table-wrapper">
+                <table class="fl-table">
+                    <thead>
+                        <tr id="tr-users">
+                            <th>Full Name</th>
+                            <th>Grades</th>
+                            <th>Roles</th>
+                        </tr>
+                    </thead>
+                    <tbody class="grades" id="list-grades"> <!--Keep the id-->
+                        <!-- The elements are added dynamically, exemple of what it look like:
                     <tr>
                        <td>TestNewCoucou</td>
                     </tr>
                     -->
-                </tbody>
-            </table>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 
@@ -98,6 +100,10 @@
             <h3>Edit this Grade</h3>
             <label for="grade">Grade</label>
             <input type="number" step="any" name="grade">
+            <div class="divcheck">
+                <label for="checkbox">Publish</label>
+                <input type="checkbox" id="checkbox" name="checkbox">
+            </div>
             <button>Update</button>
         </form>
         <button onclick="window.editGrade.close();" aria-label="close" class="x">❌</button>

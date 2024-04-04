@@ -240,7 +240,7 @@ dialog label {
     display: flex;
 }
 
-dialog input {
+dialog input:not([type="checkbox"]) {
     width: 100%;
     padding: 8px;
     margin-bottom: 10px;
@@ -248,6 +248,15 @@ dialog input {
     border: 1px solid #ccc;
     outline: none;
     padding: 8px;
+}
+
+dialog input[type="checkbox"] {
+    display: flex;
+}
+
+.divcheck {
+    display: flex;
+    gap: 10px;
 }
 
 dialog textarea {
@@ -465,4 +474,8 @@ h1 {
 
 .buttonAddT:hover {
     background-color: #334e77;
+}
+
+.fas {
+    cursor: pointer;
 }

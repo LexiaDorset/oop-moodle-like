@@ -394,6 +394,7 @@ onAuthStateChanged(auth, (_user) => {
             else {
               global.navButton(profile, docu.id, document.querySelector(".dropdown-toggle"), document.querySelector(".dropdown"), document.querySelector(".logout"), auth, false);
               global.showCourses(document.querySelector(".nav-extend"), document.querySelector(".toggle-all"), "./courses.html", "My Courses", true);
+              addModules();
             }
           });
 

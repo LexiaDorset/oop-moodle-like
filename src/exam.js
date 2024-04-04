@@ -146,6 +146,7 @@ function addGrades() {
                     let grade = "";
                     const gradeQuery = query(global.gradesRef, where(global.gradesExamId, '==', examId), where(global.gradesUserId, '==', userId));
                     let gradeId = null;
+                    let publish = false;
                     onSnapshot(gradeQuery, (querySnapshot) => {
                         if (querySnapshot.empty) {
                             td3.innerText = "-";
@@ -153,8 +154,14 @@ function addGrades() {
                         }
                         querySnapshot.forEach((docu) => {
                             grade = global.getGradesGrade(docu.data());
-                            td3.innerText = grade;
+                            if (role != global.roleStudent || global.getGradesPublish(docu.data())) {
+                                td3.innerText = grade;
+                            }
+                            else {
+                                td3.innerText = "-";
+                            }
                             gradeId = docu.id;
+                            publish = global.getGradesPublish(docu.data());
                         });
                     });
                     tr.append(td, td3, td2);
@@ -166,6 +173,7 @@ function addGrades() {
                             window.editGrade.showModal();
                             editGradeForm.grade.value = grade;
                             editGradeForm.grade.id = userId;
+                            editGradeForm.checkbox.checked = publish;
                         };
                         td4.append(i);
                         tr.append(td4);
@@ -181,6 +189,9 @@ function addGrades() {
     });
 
 }
+
+let publishGen = false;
+let buttonPublish = document.createElement('button');
 
 let editGradeForm = document.querySelector('.edit-grade');
 editGradeForm.addEventListener('submit', (e) => {
@@ -217,9 +228,14 @@ editGradeForm.addEventListener('submit', (e) => {
                 addDoc(global.gradesRef, {
                     exam_id: examId,
                     user_id: editGradeForm.grade.id,
-                    grade: editGradeForm.grade.value
+                    grade: editGradeForm.grade.value,
+                    publish: editGradeForm.checkbox.checked
                 }).then(() => {
                     console.log("Grade successfully added!");
+                    if (publishGen && publishGen != editGradeForm.checkbox.checked) {
+                        publishGen = editGradeForm.checkbox.checked;
+                        changePublish();
+                    }
                     window.editGrade.close();
                 }).catch((error) => {
                     console.error("Error updating document: ", error);
@@ -227,8 +243,13 @@ editGradeForm.addEventListener('submit', (e) => {
             }
             querySnapshot.forEach((docu) => {
                 updateDoc(docu.ref, {
-                    grade: editGradeForm.grade.value
+                    grade: editGradeForm.grade.value,
+                    publish: editGradeForm.checkbox.checked
                 }).then(() => {
+                    if (publishGen && publishGen != editGradeForm.checkbox.checked) {
+                        publishGen = editGradeForm.checkbox.checked;
+                        changePublish();
+                    }
                     console.log("Grade successfully updated!");
                     window.editGrade.close();
                 }).catch((error) => {
@@ -241,6 +262,40 @@ editGradeForm.addEventListener('submit', (e) => {
     }
     editExamForm.reset();
 });
+
+function publishGrades() {
+    const gradeQuery = query(global.gradesRef, where(global.gradesExamId, '==', examId));
+    getDocs(gradeQuery)
+        .then((querySnapshot) => {
+            querySnapshot.forEach((docu) => {
+                updateDoc(docu.ref, {
+                    publish: publishGen
+                }).then(() => {
+                    console.log("Grade successfully updated!");
+                }).catch((error) => {
+                    console.error("Error updating document: ", error);
+                });
+            });
+        }).catch((error) => {
+            console.error("Error getting documents: ", error);
+        });
+}
+
+function changePublish() {
+    if (publishGen) {
+        buttonPublish.innerText = "Unpublish all grades";
+    }
+    else {
+        buttonPublish.innerText = "Publish all grades";
+    }
+    updateDoc(exam, {
+        publish: publishGen
+    }).then(() => {
+        console.log("Document successfully updated!");
+    }).catch((error) => {
+        console.error("Error updating document: ", error);
+    });
+}
 
 // *-------------------------------------------------------------------------------* //
 // *-------------------------- Profile Redirection ----------------------------* //
@@ -295,7 +350,7 @@ onAuthStateChanged(auth, (user) => {
                             examButton.classList.add("active");
                         }
                         else {
-                            document.querySelector(".table-wrapper").style.display = "block";
+                            document.querySelector(".participants-page").style.display = "block";
                             gradesButton.classList.add("active");
                         }
                     }).catch((error) => {
@@ -303,6 +358,28 @@ onAuthStateChanged(auth, (user) => {
                     });
                 }
                 else {
+
+                    buttonPublish.classList.add("buttonAddT");
+                    buttonPublish.style.margin = "auto";
+                    getDoc(exam).then((docu5) => {
+                        if (docu5.exists()) {
+                            publishGen = global.getExamPublish(docu5.data());
+                            if (publishGen) {
+                                buttonPublish.innerText = "Unpublish all grades";
+                            }
+                            else {
+                                buttonPublish.innerText = "Publish all grades";
+                            }
+                        }
+                    });
+
+                    document.querySelector(".participants-page").append(buttonPublish);
+                    buttonPublish.addEventListener('click', (e) => {
+                        publishGen = buttonPublish.innerText == "Publish all grades";
+                        changePublish();
+                        publishGrades();
+                    });
+
                     let th = document.createElement('th');
                     th.innerText = "Edit";
                     document.getElementById("tr-users").append(th);
@@ -343,7 +420,7 @@ onAuthStateChanged(auth, (user) => {
                             examButton.classList.add("active");
                         }
                         else {
-                            document.querySelector(".table-wrapper").style.display = "block";
+                            document.querySelector(".participants-page").style.display = "block";
                             gradesButton.classList.add("active");
                         }
                     }).catch((error) => {

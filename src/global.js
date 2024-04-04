@@ -127,17 +127,19 @@ export const courseModule = "module_id";
 export const gradesUserId = "user_id";
 export const gradesGrade = "grade";
 export const gradesExamId = "exam_id";
+export const gradesPublish = "publish";
 
 // Roles
 export const roleAdmin = "admin";
 export const roleStudent = "student";
 export const roleFaculty = "faculty";
 
-// Grades
+// Exams
 export const examModuleId = "module_id";
 export const examDate = "date";
 export const examName = "name";
 export const examDescription = "description";
+export const examPublish = "publish";
 
 // Class
 export const className = "name";
@@ -213,6 +215,9 @@ export function getExamName(data) {
 export function getExamDescription(data) {
     return data.description;
 }
+export function getExamPublish(data) {
+    return data.publish;
+}
 
 // Grades get values
 export function getGradesUserId(data) {
@@ -223,6 +228,9 @@ export function getGradesGrade(data) {
 }
 export function getGradesExamId(data) {
     return data.exam_id;
+}
+export function getGradesPublish(data) {
+    return data.publish;
 }
 
 // Class get values
