@@ -18,7 +18,8 @@ import {
 } from 'firebase/firestore';
 
 import * as global from "./global.js";
-
+// Name: Lucile PELOU
+// Student ID: 74526
 // Auth
 const auth = getAuth();
 

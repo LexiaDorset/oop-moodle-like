@@ -13,7 +13,8 @@ import {
 } from 'firebase/firestore';
 
 import * as global from "./global.js";
-
+// Name: Lucile PELOU
+// Student ID: 74526
 // Your web app's Firebase configuration
 const firebaseConfig = {
     apiKey: "AIzaSyDh4Hfogm5owW-g1PBv2ClffErwz7g88D8",
