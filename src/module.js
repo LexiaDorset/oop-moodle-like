@@ -270,7 +270,7 @@ function addCourses() {
                     minute: '2-digit'
                 });
             }
-            if (role == global.roleAdmin) {
+            if (role == global.roleAdmin || role == global.roleFaculty) {
                 let divSup = document.createElement('div');
                 let div = document.createElement('div');
                 let div2 = document.createElement('div');
