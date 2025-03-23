@@ -12,6 +12,10 @@
 
 ## Installation
 
+You can access to the website with this link: https://lexiadorset.github.io/oop-moodle-like/dist
+
+If you want to dev:
+
 1. Clone this repository :
    ```bash
    git clone https://github.com/LexiaDorset/oop-moodle-like.git
